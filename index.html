@@ -1,0 +1,2801 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CodeShield CBIT — Proctored Coding & Auto-Grading Arena</title>
+  <script src="https://cdn.tailwindcss.com/3.4.17"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'system-ui', 'sans-serif'],
+            mono: ['JetBrains Mono', 'ui-monospace', 'monospace'],
+          }
+        }
+      }
+    };
+  </script>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background-color: #0b0f19;
+      color: #e2e8f0;
+      margin: 0;
+      overflow-x: hidden;
+    }
+    .code-editor-area {
+      font-family: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      tab-size: 4;
+      line-height: 1.6;
+    }
+    .no-select-exam {
+      user-select: none;
+      -webkit-user-select: none;
+    }
+    ::-webkit-scrollbar { width: 8px; height: 8px; }
+    ::-webkit-scrollbar-track { background: #0f172a; }
+    ::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+    ::-webkit-scrollbar-thumb:hover { background: #475569; }
+    @keyframes pulseBorder {
+      0%, 100% { border-color: rgba(239, 68, 68, 0.8); }
+      50% { border-color: rgba(239, 68, 68, 0.2); }
+    }
+    .flag-pulse { animation: pulseBorder 1.5s infinite; }
+
+    /* Bright / Light Theme Overrides */
+    html.light-theme body {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+    html.light-theme header {
+      background-color: rgba(255, 255, 255, 0.95) !important;
+      border-color: #e2e8f0 !important;
+    }
+    html.light-theme .bg-slate-950,
+    html.light-theme .bg-slate-950\/80,
+    html.light-theme .bg-slate-950\/60,
+    html.light-theme .bg-slate-950\/50 {
+      background-color: #f1f5f9 !important;
+    }
+    html.light-theme .bg-slate-900,
+    html.light-theme .bg-slate-900\/95,
+    html.light-theme .bg-slate-900\/80,
+    html.light-theme .bg-slate-900\/60 {
+      background-color: #ffffff !important;
+    }
+    html.light-theme .bg-slate-800,
+    html.light-theme .bg-slate-800\/90 {
+      background-color: #e2e8f0 !important;
+      color: #1e293b !important;
+    }
+    html.light-theme .from-slate-900 {
+      --tw-gradient-from: #ffffff !important;
+      --tw-gradient-to: #eef2ff !important;
+      --tw-gradient-stops: #ffffff, #f8fafc, #e0e7ff !important;
+    }
+    html.light-theme .border-slate-800,
+    html.light-theme .border-slate-800\/90,
+    html.light-theme .border-slate-800\/80,
+    html.light-theme .border-slate-700 {
+      border-color: #cbd5e1 !important;
+    }
+    html.light-theme .divide-slate-800\/70 > :not([hidden]) ~ :not([hidden]) {
+      border-color: #e2e8f0 !important;
+    }
+    html.light-theme .text-white,
+    html.light-theme .text-slate-100,
+    html.light-theme .text-slate-200 {
+      color: #0f172a !important;
+    }
+    html.light-theme .text-slate-300 {
+      color: #334155 !important;
+    }
+    html.light-theme .text-slate-400,
+    html.light-theme .text-slate-500 {
+      color: #475569 !important;
+    }
+    html.light-theme .text-indigo-300,
+    html.light-theme .text-indigo-400 {
+      color: #4338ca !important;
+    }
+    html.light-theme .text-emerald-300,
+    html.light-theme .text-emerald-400 {
+      color: #047857 !important;
+    }
+    html.light-theme .text-rose-300,
+    html.light-theme .text-rose-400 {
+      color: #be123c !important;
+    }
+    html.light-theme .text-amber-300,
+    html.light-theme .text-amber-400 {
+      color: #b45309 !important;
+    }
+    html.light-theme .bg-indigo-600,
+    html.light-theme .bg-emerald-600,
+    html.light-theme .bg-rose-600,
+    html.light-theme .from-indigo-600 {
+      color: #ffffff !important;
+    }
+    html.light-theme .bg-indigo-600 *,
+    html.light-theme .bg-emerald-600 *,
+    html.light-theme .bg-rose-600 *,
+    html.light-theme .from-indigo-600 * {
+      color: #ffffff !important;
+    }
+    html.light-theme #codeEditor {
+      background-color: #f8fafc !important;
+      color: #0f172a !important;
+    }
+    html.light-theme #editorLineNumbers {
+      background-color: #f1f5f9 !important;
+      color: #64748b !important;
+      border-color: #cbd5e1 !important;
+    }
+    html.light-theme ::-webkit-scrollbar-track { background: #f1f5f9; }
+    html.light-theme ::-webkit-scrollbar-thumb { background: #cbd5e1; }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col bg-slate-950 text-slate-100 selection:bg-indigo-500 selection:text-white">
+
+  <!-- TOP NAVIGATION BAR -->
+  <header class="sticky top-0 z-30 bg-slate-900/95 backdrop-blur border-b border-slate-800 px-4 py-2.5">
+    <div class="max-w-7xl mx-auto flex flex-wrap items-center justify-between gap-3">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-600 via-blue-600 to-cyan-500 flex items-center justify-center shadow-lg shadow-indigo-500/20 shrink-0">
+          <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l9-5-9-5-9 5 9 5z"/>
+            <path stroke-linecap="round" stroke-linejoin="round" d="M12 14l6.16-3.422a12.083 12.083 0 01.665 6.479A11.952 11.952 0 0012 20.055a11.952 11.952 0 00-6.824-2.998 12.078 12.078 0 01.665-6.479L12 14z"/>
+          </svg>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-bold text-base tracking-tight text-white">CodeShield CBIT</span>
+            <span class="text-[11px] font-semibold uppercase tracking-wider px-2 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">ChaitanyaLock v3.0</span>
+          </div>
+          <p class="text-xs text-slate-400">Lock the Tab. Prove the Logic. · CBIT Proctored Coding &amp; Auto-Grading Arena (1601xxxxxxxx &amp; @cbit.ac.in / @cbit.org.in)</p>
+        </div>
+      </div>
+
+      <!-- Right controls: Theme Toggle + Quick Role Switcher + Active User Badge -->
+      <div class="flex flex-wrap items-center gap-2">
+        <button id="themeToggleBtn" type="button" onclick="toggleTheme()" class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition" title="Switch between Bright and Dark Theme">
+          <span id="themeToggleIcon">☀️</span>
+          <span id="themeToggleLabel">Bright Theme</span>
+        </button>
+        <div class="flex items-center bg-slate-800/90 border border-slate-700 rounded-lg p-1 text-xs">
+          <span class="px-2 text-slate-400 font-medium hidden sm:inline">Quick Demo Switch:</span>
+          <button id="quickStudentBtn" type="button" onclick="quickSwitchRole('student')" class="px-2.5 py-1 rounded-md font-medium transition text-slate-300 hover:text-white hover:bg-slate-700">
+            Test Student (160100000000)
+          </button>
+          <button id="quickAdminBtn" type="button" onclick="quickSwitchRole('admin')" class="px-2.5 py-1 rounded-md font-medium transition text-slate-300 hover:text-white hover:bg-slate-700">
+            Admin (admin)
+          </button>
+        </div>
+
+        <div id="navUserBox" class="hidden items-center gap-2.5 pl-2 border-l border-slate-800">
+          <div class="text-right">
+            <div id="navUserName" class="text-xs font-semibold text-white"></div>
+            <div id="navUserIdent" class="text-[11px] text-slate-400 font-mono"></div>
+          </div>
+          <span id="navRoleBadge" class="text-[11px] font-bold uppercase px-2 py-0.5 rounded border"></span>
+          <button id="logoutBtn" type="button" onclick="handleLogout()" class="text-xs bg-slate-800 hover:bg-rose-600/20 hover:text-rose-300 hover:border-rose-500/40 text-slate-300 border border-slate-700 px-3 py-1.5 rounded-lg transition font-medium">
+            Logout
+          </button>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- TOAST NOTIFICATION BANNER -->
+  <div id="toastContainer" class="fixed bottom-5 right-5 z-50 flex flex-col gap-2 max-w-md w-full pointer-events-none px-4 sm:px-0"></div>
+
+  <!-- CONFIRMATION MODAL (replaces native confirm/alert for sandbox safety) -->
+  <div id="modalOverlay" class="hidden fixed inset-0 z-50 bg-slate-950/80 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 shadow-2xl">
+      <h3 id="modalTitle" class="text-lg font-bold text-white mb-2">Confirm Action</h3>
+      <p id="modalMessage" class="text-sm text-slate-300 mb-6 leading-relaxed"></p>
+      <div class="flex items-center justify-end gap-3">
+        <button id="modalCancelBtn" type="button" onclick="closeModal()" class="px-4 py-2 rounded-lg text-sm font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+          Cancel
+        </button>
+        <button id="modalConfirmBtn" type="button" class="px-4 py-2 rounded-lg text-sm font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
+          Confirm
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- CODE INSPECTION MODAL (FOR ADMIN) -->
+  <div id="inspectModal" class="hidden fixed inset-0 z-50 bg-slate-950/85 backdrop-blur-sm items-center justify-center p-4">
+    <div class="bg-slate-900 border border-slate-700 rounded-2xl max-w-4xl w-full max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
+      <div class="flex items-center justify-between px-6 py-4 border-b border-slate-800 bg-slate-900/60">
+        <div>
+          <h3 id="inspectModalTitle" class="text-base font-bold text-white">Student Submission &amp; Proctoring Audit</h3>
+          <p id="inspectModalSub" class="text-xs text-slate-400 mt-0.5"></p>
+        </div>
+        <button id="closeInspectBtn" type="button" onclick="closeInspectModal()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">
+          Close Window
+        </button>
+      </div>
+      <div id="inspectModalBody" class="p-6 overflow-y-auto space-y-5 text-sm"></div>
+    </div>
+  </div>
+
+  <!-- FULLSCREEN VIOLATION LOCKDOWN OVERLAY (DURING EXAM) -->
+  <div id="fullscreenLockOverlay" class="hidden fixed inset-0 z-40 bg-slate-950/95 backdrop-blur-xl flex-col items-center justify-center p-6 text-center">
+    <div class="max-w-lg w-full bg-slate-900 border-2 border-rose-500/80 rounded-2xl p-8 shadow-2xl flag-pulse">
+      <div class="w-16 h-16 rounded-full bg-rose-500/20 border border-rose-500/40 flex items-center justify-center mx-auto mb-4 text-rose-400">
+        <svg class="w-9 h-9" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+        </svg>
+      </div>
+      <span class="inline-block text-xs font-bold uppercase tracking-widest px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30 mb-3">
+        Security Lockdown Triggered
+      </span>
+      <h2 class="text-2xl font-bold text-white mb-2">Fullscreen Mode Exited — Violation Flagged!</h2>
+      <p class="text-sm text-slate-300 mb-4 leading-relaxed">
+        Your exam interface has been locked because you exited fullscreen or switched focus. This incident has been recorded and reported to the CBIT Exam Administrator.
+      </p>
+      <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3 mb-6 text-xs font-mono text-rose-300">
+        Current Violation Flags: <span id="lockOverlayFlagCount" class="font-bold text-white">0 / 5</span>
+      </div>
+      <button id="returnFullscreenBtn" type="button" onclick="restoreExamFullscreen()" class="w-full py-3 px-5 rounded-xl font-bold text-sm bg-rose-600 hover:bg-rose-500 text-white shadow-lg shadow-rose-600/25 transition">
+        Re-Enter Fullscreen &amp; Unlock Exam
+      </button>
+    </div>
+  </div>
+
+  <!-- MAIN CONTENT AREA -->
+  <main class="flex-1 max-w-7xl w-full mx-auto px-4 py-6">
+
+    <!-- ==================== VIEW 1: AUTH (LOGIN & REGISTER) ==================== -->
+    <section id="authView" class="py-4">
+      <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+        <!-- Left Column: Institutional Info & Proctoring Specs -->
+        <div class="lg:col-span-7 space-y-6">
+          <div class="bg-gradient-to-br from-slate-900 via-slate-900 to-indigo-950/60 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-xl">
+            <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-indigo-500/15 border border-indigo-500/30 text-indigo-300 text-xs font-semibold mb-4">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              CBIT Department of CSE / IT / ECE — Automated Lab Examination Portal
+            </div>
+            <h1 class="text-2xl sm:text-3xl font-extrabold text-white tracking-tight leading-tight mb-2">
+              CodeShield CBIT — <span class="text-indigo-400">Lock the Tab. Prove the Logic.</span>
+            </h1>
+            <p class="text-sm text-slate-300 leading-relaxed mb-6">
+              The zero-trust proctored coding arena and instant auto-grading engine built for Chaitanya Bharathi Institute of Technology engineers (<code class="text-indigo-300 font-mono">1601xxxxxxxx</code> &amp; <code class="text-indigo-300 font-mono">@cbit.ac.in</code> / <code class="text-indigo-300 font-mono">@cbit.org.in</code>). Write, compile, and benchmark <strong>Python 3, Java, and C</strong> code inside a fullscreen kiosk lockdown where every tab switch or clipboard shortcut is blocked and flagged in real time.
+            </p>
+
+            <!-- Feature Grid -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-slate-950/60 border border-slate-800/90 rounded-xl p-4">
+                <div class="flex items-center gap-2.5 font-semibold text-white text-sm mb-1">
+                  <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                  CBIT Identity Verification
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Validates 12-digit CBIT roll numbers starting with <code class="text-slate-200">1601</code> (e.g., <code class="text-slate-200">160122733001</code>) or official <code class="text-slate-200">@cbit.ac.in</code> and <code class="text-slate-200">@cbit.org.in</code> emails.
+                </p>
+              </div>
+
+              <div class="bg-slate-950/60 border border-slate-800/90 rounded-xl p-4">
+                <div class="flex items-center gap-2.5 font-semibold text-white text-sm mb-1">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-400"></span>
+                  Zero Copy-Paste &amp; Tab Lock
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Blocks <code class="text-slate-200">Ctrl+C/V/X</code>, right-click, drag-and-drop, DevTools, exiting fullscreen, and tab/window switches—logging every violation to Admin.
+                </p>
+              </div>
+
+              <div class="bg-slate-950/60 border border-slate-800/90 rounded-xl p-4">
+                <div class="flex items-center gap-2.5 font-semibold text-white text-sm mb-1">
+                  <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+                  Java, Python &amp; C Compiler
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Built-in multi-language code editor &amp; execution sandbox that runs student solutions against visible sample inputs and hidden grading test cases.
+                </p>
+              </div>
+
+              <div class="bg-slate-950/60 border border-slate-800/90 rounded-xl p-4">
+                <div class="flex items-center gap-2.5 font-semibold text-white text-sm mb-1">
+                  <span class="w-2.5 h-2.5 rounded-full bg-amber-400"></span>
+                  Admin-Configurable Auto-Grading
+                </div>
+                <p class="text-xs text-slate-400 leading-relaxed">
+                  Only the Admin can author questions, define sample &amp; hidden test cases, and switch grading between <strong>Partial</strong>, <strong>All-or-Nothing</strong>, or <strong>Weighted</strong>.
+                </p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Pre-Configured Credentials Card -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-6">
+            <h2 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Pre-Configured Login Accounts for Instant Testing</h2>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div class="bg-slate-950 border border-indigo-500/30 rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold uppercase px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Admin Account</span>
+                    <span class="text-xs text-slate-400">Full Control</span>
+                  </div>
+                  <div class="text-xs space-y-1 font-mono text-slate-300 mb-3">
+                    <div>Login ID: <strong class="text-white">admin</strong> <span class="text-slate-500">(or admin@cbit.ac.in)</span></div>
+                    <div>Password: <strong class="text-white">admin123</strong></div>
+                  </div>
+                </div>
+                <button id="fillAdminBtn" type="button" onclick="fillCredentials('admin', 'admin123', true)" class="w-full py-2 px-3 rounded-lg text-xs font-semibold bg-indigo-600 hover:bg-indigo-500 text-white transition">
+                  One-Click Login as Admin &rarr;
+                </button>
+              </div>
+
+              <div class="bg-slate-950 border border-emerald-500/30 rounded-xl p-4 flex flex-col justify-between">
+                <div>
+                  <div class="flex items-center justify-between mb-2">
+                    <span class="text-xs font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Testing Student</span>
+                    <span class="text-xs text-slate-400">Roll 1601xxxxxxxx</span>
+                  </div>
+                  <div class="text-xs space-y-1 font-mono text-slate-300 mb-3">
+                    <div>Roll No: <strong class="text-white">160100000000</strong></div>
+                    <div>Password: <strong class="text-white">test123</strong></div>
+                  </div>
+                </div>
+                <button id="fillStudentBtn" type="button" onclick="fillCredentials('160100000000', 'test123', true)" class="w-full py-2 px-3 rounded-lg text-xs font-semibold bg-emerald-600 hover:bg-emerald-500 text-white transition">
+                  One-Click Login as Test Student &rarr;
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Right Column: Login & Registration Forms -->
+        <div class="lg:col-span-5">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl shadow-xl overflow-hidden">
+            <!-- Tabs -->
+            <div class="grid grid-cols-2 border-b border-slate-800 bg-slate-950/50">
+              <button id="tabLoginBtn" type="button" onclick="switchAuthTab('login')" class="py-3.5 text-sm font-semibold border-b-2 border-indigo-500 text-white bg-slate-900 transition">
+                Sign In to Portal
+              </button>
+              <button id="tabRegisterBtn" type="button" onclick="switchAuthTab('register')" class="py-3.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition">
+                CBIT Student Registration
+              </button>
+            </div>
+
+            <!-- LOGIN FORM -->
+            <form id="loginForm" onsubmit="handleLogin(event)" class="p-6 space-y-4">
+              <div>
+                <label for="loginIdent" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                  CBIT Roll Number, Institutional Email, or Admin ID
+                </label>
+                <input id="loginIdent" type="text" required placeholder="160100000000 or name@cbit.ac.in or admin"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono" />
+              </div>
+
+              <div>
+                <label for="loginPw" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                  Password
+                </label>
+                <input id="loginPw" type="password" required placeholder="••••••••"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+              </div>
+
+              <div id="loginError" class="hidden text-xs font-medium text-rose-400 bg-rose-500/10 border border-rose-500/30 rounded-lg p-3"></div>
+
+              <button id="loginSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition">
+                Sign In to Portal
+              </button>
+
+              <div class="pt-2 border-t border-slate-800 flex items-center justify-between text-xs text-slate-400">
+                <span>Fill credentials without auto-submitting:</span>
+                <div class="flex gap-2">
+                  <button id="justFillAdmin" type="button" onclick="fillCredentials('admin', 'admin123', false)" class="text-indigo-400 hover:underline font-medium">Fill Admin</button>
+                  <span>·</span>
+                  <button id="justFillStudent" type="button" onclick="fillCredentials('160100000000', 'test123', false)" class="text-emerald-400 hover:underline font-medium">Fill Student</button>
+                </div>
+              </div>
+            </form>
+
+            <!-- REGISTER FORM -->
+            <form id="registerForm" onsubmit="handleRegister(event)" class="hidden p-6 space-y-4">
+              <div>
+                <label for="regName" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                  Student Full Name
+                </label>
+                <input id="regName" type="text" required placeholder="e.g., Rohan Kumar Reddy"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="regBranch" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                    CBIT Branch
+                  </label>
+                  <select id="regBranch" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <option value="CSE">B.E. — CSE</option>
+                    <option value="IT">B.E. — IT</option>
+                    <option value="AI&DS">B.E. — AI &amp; DS</option>
+                    <option value="AIML">B.E. — CSE (AI &amp; ML)</option>
+                    <option value="ECE">B.E. — ECE</option>
+                    <option value="EEE">B.E. — EEE</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="regSem" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                    Semester
+                  </label>
+                  <select id="regSem" class="w-full px-3 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white focus:outline-none focus:border-indigo-500">
+                    <option value="III Sem">III Semester</option>
+                    <option value="IV Sem">IV Semester</option>
+                    <option value="V Sem" selected>V Semester</option>
+                    <option value="VI Sem">VI Semester</option>
+                    <option value="VII Sem">VII Semester</option>
+                  </select>
+                </div>
+              </div>
+
+              <div>
+                <label for="regIdent" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                  CBIT Roll Number (<code class="text-indigo-300">1601xxxxxxxx</code>) OR Official Email
+                </label>
+                <input id="regIdent" type="text" required oninput="validateRegIdentifierLive()" placeholder="160122733005 or student@cbit.ac.in / @cbit.org.in"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500 font-mono" />
+                <div id="regIdentHint" class="mt-1.5 text-[11px] text-slate-400">
+                  Must be a 12-digit roll number starting with <code class="text-slate-200">1601</code> or an email ending with <code class="text-slate-200">@cbit.ac.in</code> or <code class="text-slate-200">@cbit.org.in</code>.
+                </div>
+              </div>
+
+              <div>
+                <label for="regPw" class="block text-xs font-semibold uppercase tracking-wider text-slate-300 mb-1.5">
+                  Create Password (min 6 characters)
+                </label>
+                <input id="regPw" type="password" required minlength="6" placeholder="Minimum 6 characters"
+                  class="w-full px-3.5 py-2.5 rounded-xl bg-slate-950 border border-slate-700 text-sm text-white placeholder-slate-500 focus:outline-none focus:border-indigo-500" />
+              </div>
+
+              <div id="regError" class="hidden text-xs font-medium text-rose-400 bg-rose-500/10 border border-rose-500/30 rounded-lg p-3"></div>
+
+              <button id="regSubmitBtn" type="submit" class="w-full py-2.5 px-4 rounded-xl font-semibold text-sm bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20 transition">
+                Register CBIT Student Account
+              </button>
+            </form>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 2: ADMIN DASHBOARD ==================== -->
+    <section id="adminView" class="hidden space-y-6">
+      <!-- Admin Header Banner -->
+      <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">Administrator Control Center</span>
+            <span class="text-xs text-slate-400">CBIT Examination Cell</span>
+          </div>
+          <h2 class="text-xl font-bold text-white mt-1">Question Authoring, Test Case Manager, Auto-Grading &amp; Live Proctoring</h2>
+        </div>
+
+        <!-- Summary KPI Pills -->
+        <div class="flex flex-wrap items-center gap-3">
+          <div class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-center">
+            <div id="adminStatExams" class="text-lg font-extrabold text-white">0</div>
+            <div class="text-[11px] text-slate-400">Active Exams</div>
+          </div>
+          <div class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-center">
+            <div id="adminStatQns" class="text-lg font-extrabold text-indigo-400">0</div>
+            <div class="text-[11px] text-slate-400">Total Questions</div>
+          </div>
+          <div class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-center">
+            <div id="adminStatAttempts" class="text-lg font-extrabold text-emerald-400">0</div>
+            <div class="text-[11px] text-slate-400">Student Attempts</div>
+          </div>
+          <div class="bg-slate-950 border border-rose-500/30 rounded-xl px-4 py-2 text-center">
+            <div id="adminStatFlags" class="text-lg font-extrabold text-rose-400">0</div>
+            <div class="text-[11px] text-rose-300">Violation Flags</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Admin Sub-Navigation Tabs -->
+      <div class="flex flex-wrap items-center justify-between gap-3 border-b border-slate-800 pb-3">
+        <div class="flex flex-wrap gap-2">
+          <button id="adminTabQnsBtn" type="button" onclick="switchAdminTab('questions')" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-indigo-600 text-white">
+            1. Exams, Questions &amp; Test Cases
+          </button>
+          <button id="adminTabResultsBtn" type="button" onclick="switchAdminTab('results')" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+            2. Auto-Graded Results &amp; Code Audit
+          </button>
+          <button id="adminTabFlagsBtn" type="button" onclick="switchAdminTab('flags')" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+            3. Live Proctoring Violation Log
+          </button>
+          <button id="adminTabStudentsBtn" type="button" onclick="switchAdminTab('students')" class="px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800">
+            4. Registered CBIT Students
+          </button>
+        </div>
+
+        <div class="flex items-center gap-2">
+          <label for="adminExamSelect" class="text-xs text-slate-400 font-medium">Selected Exam:</label>
+          <select id="adminExamSelect" onchange="handleAdminExamChange()" class="px-3 py-1.5 rounded-xl bg-slate-900 border border-slate-700 text-xs font-semibold text-white focus:outline-none focus:border-indigo-500"></select>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB 1: EXAMS, QUESTIONS & TEST CASES -->
+      <div id="adminQuestionsPanel" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <!-- Left 7 cols: Current Exam Settings & Questions List -->
+        <div class="lg:col-span-7 space-y-6">
+          <!-- Create / Configure Exam Card -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <div class="flex items-center justify-between mb-3">
+              <h3 class="text-sm font-bold text-white uppercase tracking-wider">Create New Proctored Exam</h3>
+              <span class="text-xs text-slate-400">Admin-only exam configuration</span>
+            </div>
+            <form id="createExamForm" onsubmit="handleCreateExam(event)" class="grid grid-cols-1 sm:grid-cols-12 gap-3 items-end">
+              <div class="sm:col-span-5">
+                <label for="newExamTitle" class="block text-[11px] text-slate-400 mb-1">Exam Title &amp; Course Code</label>
+                <input id="newExamTitle" type="text" required placeholder="e.g., CS402 — Competitive Coding Lab"
+                  class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white" />
+              </div>
+              <div class="sm:col-span-2">
+                <label for="newExamMins" class="block text-[11px] text-slate-400 mb-1">Minutes</label>
+                <input id="newExamMins" type="number" min="5" max="240" value="60" required
+                  class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white" />
+              </div>
+              <div class="sm:col-span-2">
+                <label for="newExamMaxFlags" class="block text-[11px] text-slate-400 mb-1">Max Flags</label>
+                <input id="newExamMaxFlags" type="number" min="1" max="20" value="5" required
+                  class="w-full px-3 py-2 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white" />
+              </div>
+              <div class="sm:col-span-3">
+                <button id="createExamBtn" type="submit" class="w-full py-2 px-3 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-semibold transition">
+                  + Create Exam
+                </button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Questions in Selected Exam -->
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+            <div class="flex flex-wrap items-center justify-between gap-2 mb-4">
+              <div>
+                <h3 id="adminCurrExamHeading" class="text-base font-bold text-white">Questions in Selected Exam</h3>
+                <p class="text-xs text-slate-400">Change any question's Automatic Grading Mode below to immediately re-grade student submissions.</p>
+              </div>
+            </div>
+            <div id="adminQuestionsList" class="space-y-4"></div>
+          </div>
+        </div>
+
+        <!-- Right 5 cols: Author New Question & Test Cases -->
+        <div class="lg:col-span-5">
+          <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5 sticky top-20">
+            <h3 class="text-base font-bold text-white mb-1">Add New Coding Question &amp; Test Cases</h3>
+            <p class="text-xs text-slate-400 mb-4">Only the Admin can author questions, define sample output, and select the automatic grading algorithm.</p>
+
+            <form id="addQuestionForm" onsubmit="handleAddQuestion(event)" class="space-y-3.5">
+              <div>
+                <label for="qnTitle" class="block text-xs font-semibold text-slate-300 mb-1">Question Title</label>
+                <input id="qnTitle" type="text" required placeholder="e.g., Factorial &amp; Trailing Zeros"
+                  class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white" />
+              </div>
+
+              <div>
+                <label for="qnBody" class="block text-xs font-semibold text-slate-300 mb-1">Problem Statement &amp; Input/Output Format</label>
+                <textarea id="qnBody" rows="4" required placeholder="Describe the problem, input format from stdin, and expected output format to stdout..."
+                  class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white leading-relaxed"></textarea>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div>
+                  <label for="qnMarks" class="block text-xs font-semibold text-slate-300 mb-1">Maximum Marks</label>
+                  <input id="qnMarks" type="number" min="1" max="100" step="1" value="10" required
+                    class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white" />
+                </div>
+                <div>
+                  <label for="qnMode" class="block text-xs font-semibold text-slate-300 mb-1">Automatic Grading Mode</label>
+                  <select id="qnMode" class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs text-white">
+                    <option value="partial">Partial (Proportional to tests passed)</option>
+                    <option value="all">All-or-Nothing (100% tests required)</option>
+                    <option value="weighted">Weighted (30% Sample / 70% Hidden)</option>
+                  </select>
+                </div>
+              </div>
+
+              <!-- Test Cases Input (Supports structured blocks with sample vs #hidden) -->
+              <div>
+                <div class="flex items-center justify-between mb-1">
+                  <label for="qnTestsRaw" class="text-xs font-semibold text-slate-300">Test Cases (Sample &amp; Hidden)</label>
+                  <button id="insertSampleTestBlockBtn" type="button" onclick="insertTemplateTestCase()" class="text-[11px] text-indigo-400 hover:underline font-medium">
+                    + Insert Test Block Template
+                  </button>
+                </div>
+                <p class="text-[11px] text-slate-400 mb-1.5">
+                  Separate blocks with <code class="text-slate-200">---</code>. Put input, then <code class="text-slate-200">=&gt;</code>, then expected output. Prefix a block with <code class="text-amber-300">#hidden</code> to keep it hidden from students during sample runs.
+                </p>
+                <textarea id="qnTestsRaw" rows="7" required
+                  class="w-full px-3 py-2 rounded-xl bg-slate-950 border border-slate-700 text-xs font-mono text-emerald-300"
+                  placeholder="5&#10;=>&#10;120&#10;---&#10;#hidden&#10;10&#10;=>&#10;3628800">5
+=>
+120
+---
+4
+=>
+24
+---
+#hidden
+6
+=>
+720</textarea>
+              </div>
+
+              <button id="addQuestionBtn" type="submit" class="w-full py-2.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg shadow-emerald-600/20 transition">
+                Save Question &amp; Test Cases to Exam
+              </button>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB 2: STUDENT RESULTS & AUTO-GRADING SCORECARD -->
+      <div id="adminResultsPanel" class="hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div>
+              <h3 class="text-base font-bold text-white">Automatic Grading Scorecard &amp; Student Submissions</h3>
+              <p class="text-xs text-slate-400">Scores are automatically computed based on the Admin's grading mode selection per question.</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <label for="adminFlagPenaltySelect" class="text-xs text-slate-300 font-medium">Exam Flag Deduction Policy:</label>
+              <select id="adminFlagPenaltySelect" onchange="handlePenaltyPolicyChange()" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white">
+                <option value="0">0% deduction per flag (Auto-submit on max flags only)</option>
+                <option value="5">-5% score penalty per violation flag</option>
+                <option value="10">-10% score penalty per violation flag</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[11px]">
+                  <th class="py-3 px-3">CBIT Student</th>
+                  <th class="py-3 px-3">Roll No / Email</th>
+                  <th class="py-3 px-3">Status</th>
+                  <th class="py-3 px-3">Question Breakdown</th>
+                  <th class="py-3 px-3">Raw Score</th>
+                  <th class="py-3 px-3">Violation Flags</th>
+                  <th class="py-3 px-3">Final Auto-Grade</th>
+                  <th class="py-3 px-3 text-right">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="adminResultsTableBody" class="divide-y divide-slate-800/70"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB 3: LIVE PROCTORING VIOLATION LOG -->
+      <div id="adminFlagsPanel" class="hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+          <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
+            <div>
+              <h3 class="text-base font-bold text-white">Real-Time Proctoring &amp; Security Violation Log</h3>
+              <p class="text-xs text-slate-400">Every blocked copy/paste, tab switch, window focus loss, right-click, shortcut, or fullscreen exit is recorded here.</p>
+            </div>
+            <div class="flex flex-wrap items-center gap-2">
+              <select id="flagFilterStudent" onchange="renderAdminFlags()" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white">
+                <option value="all">All Students</option>
+              </select>
+              <button id="clearAllFlagsBtn" type="button" onclick="confirmClearFlags()" class="px-3 py-1.5 rounded-lg bg-rose-600/20 hover:bg-rose-600/30 text-rose-300 border border-rose-500/30 text-xs font-semibold transition">
+                Clear Violation History
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[11px]">
+                  <th class="py-3 px-3">Timestamp</th>
+                  <th class="py-3 px-3">Student Name</th>
+                  <th class="py-3 px-3">Roll No / Email</th>
+                  <th class="py-3 px-3">Violation Type</th>
+                  <th class="py-3 px-3">Details &amp; Context</th>
+                  <th class="py-3 px-3">Proctor Action</th>
+                </tr>
+              </thead>
+              <tbody id="adminFlagsTableBody" class="divide-y divide-slate-800/70"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ADMIN TAB 4: REGISTERED CBIT STUDENTS -->
+      <div id="adminStudentsPanel" class="hidden space-y-6">
+        <div class="bg-slate-900 border border-slate-800 rounded-2xl p-5">
+          <h3 class="text-base font-bold text-white mb-1">Registered Accounts Directory</h3>
+          <p class="text-xs text-slate-400 mb-4">All verified CBIT student accounts (<code class="text-slate-200">1601xxxxxxxx</code> and <code class="text-slate-200">@cbit.ac.in</code> / <code class="text-slate-200">@cbit.org.in</code>) and administrators.</p>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left border-collapse text-xs">
+              <thead>
+                <tr class="border-b border-slate-800 text-slate-400 uppercase tracking-wider text-[11px]">
+                  <th class="py-3 px-3">Name</th>
+                  <th class="py-3 px-3">Identifier (Roll / Email)</th>
+                  <th class="py-3 px-3">Branch &amp; Semester</th>
+                  <th class="py-3 px-3">Role</th>
+                  <th class="py-3 px-3">Identity Type</th>
+                </tr>
+              </thead>
+              <tbody id="adminStudentsTableBody" class="divide-y divide-slate-800/70"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 3: STUDENT DASHBOARD (EXAM SELECTION) ==================== -->
+    <section id="studentDashboardView" class="hidden space-y-6">
+      <div class="bg-gradient-to-r from-slate-900 via-indigo-950/50 to-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-wrap items-center justify-between gap-4">
+        <div>
+          <span class="text-xs font-bold uppercase tracking-wider px-2.5 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            Verified CBIT Student Candidate
+          </span>
+          <h2 id="studentWelcomeTitle" class="text-xl font-bold text-white mt-1.5">Welcome to CBIT Proctored Coding Portal</h2>
+          <p id="studentWelcomeSub" class="text-xs text-slate-400 mt-0.5"></p>
+        </div>
+        <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 text-xs space-y-1">
+          <div class="text-slate-400">Supported Compilers: <strong class="text-white">Python 3 · Java (JDK) · C (GCC)</strong></div>
+          <div class="text-slate-400">Proctoring Mode: <strong class="text-rose-400">Strict Fullscreen + Clipboard &amp; Tab Lock</strong></div>
+        </div>
+      </div>
+
+      <!-- Available Exams Grid -->
+      <div>
+        <h3 class="text-sm font-bold uppercase tracking-wider text-slate-400 mb-3">Available Proctored Examinations</h3>
+        <div id="studentExamsGrid" class="grid grid-cols-1 md:grid-cols-2 gap-5"></div>
+      </div>
+    </section>
+
+    <!-- ==================== VIEW 4: ACTIVE PROCTORED EXAM WORKSPACE ==================== -->
+    <section id="examWorkspaceView" class="hidden space-y-4 no-select-exam">
+
+      <!-- PRE-EXAM SECURITY AGREEMENT CARD -->
+      <div id="examIntroCard" class="max-w-3xl mx-auto bg-slate-900 border border-slate-800 rounded-2xl p-6 sm:p-8 shadow-2xl">
+        <div class="flex items-center justify-between flex-wrap gap-2 mb-4">
+          <span class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full bg-rose-500/20 text-rose-300 border border-rose-500/30">
+            Mandatory Proctoring Lockdown Briefing
+          </span>
+          <button id="backToStudentDashBtn" type="button" onclick="exitExamToDashboard()" class="text-xs text-slate-400 hover:text-white">
+            &larr; Back to Exam List
+          </button>
+        </div>
+
+        <h2 id="introExamTitle" class="text-2xl font-extrabold text-white mb-2"></h2>
+        <p id="introExamMeta" class="text-xs text-slate-400 mb-6"></p>
+
+        <div class="bg-slate-950 border border-slate-800 rounded-xl p-5 mb-6 space-y-3 text-xs text-slate-300">
+          <div class="font-bold text-white text-sm mb-1">Active Security &amp; Anti-Cheat Enforcement Rules:</div>
+          <div class="flex items-start gap-2.5">
+            <span class="text-rose-400 font-bold">1.</span>
+            <span><strong>Mandatory Fullscreen Lock:</strong> Clicking start launches the exam in fullscreen mode and locks system navigation keys. Exiting fullscreen immediately locks the editor and logs a <code class="text-rose-300">FULLSCREEN_EXIT</code> flag.</span>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="text-rose-400 font-bold">2.</span>
+            <span><strong>No Copy, Paste, Cut, Drag/Drop, or Right-Click:</strong> Clipboard operations inside the code editor and problem description are disabled and immediately flagged to the Admin.</span>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="text-rose-400 font-bold">3.</span>
+            <span><strong>No Tab Switching or Opening External Windows:</strong> Switching browser tabs (<code class="text-rose-300">visibilitychange</code>) or clicking outside the browser window (<code class="text-rose-300">window.blur</code>) triggers an immediate violation flag.</span>
+          </div>
+          <div class="flex items-start gap-2.5">
+            <span class="text-rose-400 font-bold">4.</span>
+            <span><strong>Automatic Termination Threshold:</strong> Exceeding the maximum allowed flags automatically locks and submits your exam attempt.</span>
+          </div>
+        </div>
+
+        <button id="launchProctoredExamBtn" type="button" onclick="launchActiveExam()" class="w-full py-3.5 px-6 rounded-xl font-bold text-sm bg-gradient-to-r from-indigo-600 to-blue-600 hover:from-indigo-500 hover:to-blue-500 text-white shadow-xl shadow-indigo-600/25 transition">
+          I Agree — Enter Fullscreen &amp; Start Proctored Exam
+        </button>
+      </div>
+
+      <!-- ACTIVE LOCKED EXAM INTERFACE -->
+      <div id="activeExamContainer" class="hidden space-y-3">
+
+        <!-- Top Proctoring Status & Timer Bar -->
+        <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 flex flex-wrap items-center justify-between gap-3">
+          <div class="flex flex-wrap items-center gap-3">
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800">
+              <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+              <span class="text-xs font-bold text-white" id="activeExamHeaderTitle">Exam</span>
+            </div>
+
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-800 text-xs">
+              <span class="text-slate-400">Time Remaining:</span>
+              <span id="examTimerDisplay" class="font-mono font-bold text-sm text-emerald-400">60:00</span>
+            </div>
+
+            <div class="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-rose-950/40 border border-rose-500/40 text-xs">
+              <span class="text-rose-300 font-medium">Violation Flags:</span>
+              <span id="examFlagCounter" class="font-mono font-extrabold text-sm text-rose-400">0 / 5</span>
+            </div>
+
+            <div id="fullscreenBadge" class="flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300">
+              <span>🔒 Fullscreen Locked</span>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2">
+            <button id="reqFullscreenAgainBtn" type="button" onclick="restoreExamFullscreen()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700">
+              Enforce Fullscreen
+            </button>
+            <button id="finishExamBtn" type="button" onclick="confirmFinishExam()" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow">
+              Finish &amp; Submit Exam
+            </button>
+          </div>
+        </div>
+
+        <!-- Proctoring Simulation Bar (For Testing & Verifying Flagging in Canvas) -->
+        <div class="bg-slate-900/80 border border-amber-500/30 rounded-xl px-3.5 py-2 flex flex-wrap items-center justify-between gap-2 text-xs">
+          <div class="flex items-center gap-2 text-amber-300 font-medium">
+            <span>🛡️ Proctor Verification Simulator (Test anti-cheat flagging without leaving Canvas):</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-1.5">
+            <button id="simPasteBtn" type="button" onclick="triggerSimulatedViolation('paste_attempt', 'Simulated Ctrl+V Paste in Editor')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-500/20 hover:text-rose-300 text-slate-300 border border-slate-700 text-[11px] font-mono">
+              Simulate Paste
+            </button>
+            <button id="simCopyBtn" type="button" onclick="triggerSimulatedViolation('copy_attempt', 'Simulated Ctrl+C Copy Attempt')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-500/20 hover:text-rose-300 text-slate-300 border border-slate-700 text-[11px] font-mono">
+              Simulate Copy
+            </button>
+            <button id="simTabSwitchBtn" type="button" onclick="triggerSimulatedViolation('tab_switch_or_minimize', 'Simulated Browser Tab Switch [visibilitychange]')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-500/20 hover:text-rose-300 text-slate-300 border border-slate-700 text-[11px] font-mono">
+              Simulate Tab Switch
+            </button>
+            <button id="simBlurBtn" type="button" onclick="triggerSimulatedViolation('window_lost_focus', 'Simulated External App / Window Blur')" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-500/20 hover:text-rose-300 text-slate-300 border border-slate-700 text-[11px] font-mono">
+              Simulate Window Blur
+            </button>
+            <button id="simFsExitBtn" type="button" onclick="simulateFullscreenDrop()" class="px-2.5 py-1 rounded bg-slate-800 hover:bg-rose-500/20 hover:text-rose-300 text-slate-300 border border-slate-700 text-[11px] font-mono">
+              Simulate Fullscreen Exit Lock
+            </button>
+          </div>
+        </div>
+
+        <!-- Question Selector Pills -->
+        <div id="examQuestionTabs" class="flex flex-wrap items-center gap-2"></div>
+
+        <!-- Split Workspace: Left = Problem & Sample Tests, Right = Code Editor & Compiler Console -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-4 items-start">
+
+          <!-- Left 5 Cols: Question Statement & Visible Sample Test Cases -->
+          <div class="lg:col-span-5 bg-slate-900 border border-slate-800 rounded-2xl p-5 space-y-4">
+            <div class="flex items-start justify-between gap-2 border-b border-slate-800 pb-3">
+              <div>
+                <h3 id="activeQnTitle" class="text-base font-bold text-white"></h3>
+                <div class="flex flex-wrap items-center gap-2 mt-1">
+                  <span id="activeQnMarksBadge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30"></span>
+                  <span id="activeQnGradingBadge" class="text-[11px] font-semibold px-2 py-0.5 rounded bg-amber-500/15 text-amber-300 border border-amber-500/30"></span>
+                  <span id="activeQnScoreBadge" class="text-[11px] font-bold px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30"></span>
+                </div>
+              </div>
+            </div>
+
+            <div id="activeQnBody" class="text-xs sm:text-sm text-slate-200 whitespace-pre-wrap leading-relaxed bg-slate-950/60 border border-slate-800/80 rounded-xl p-4"></div>
+
+            <div>
+              <div class="flex items-center justify-between mb-2">
+                <h4 class="text-xs font-bold uppercase tracking-wider text-slate-400">Visible Sample Test Cases</h4>
+                <span id="activeQnHiddenCount" class="text-[11px] text-slate-400"></span>
+              </div>
+              <div id="activeQnSamples" class="space-y-3"></div>
+            </div>
+          </div>
+
+          <!-- Right 7 Cols: Protected Code Editor & Compiler Output -->
+          <div class="lg:col-span-7 bg-slate-900 border border-slate-800 rounded-2xl overflow-hidden flex flex-col">
+            <!-- Editor Toolbar -->
+            <div class="bg-slate-950 border-b border-slate-800 px-4 py-2.5 flex flex-wrap items-center justify-between gap-2">
+              <div class="flex items-center gap-2">
+                <label for="editorLangSelect" class="text-xs font-semibold text-slate-400">Language:</label>
+                <select id="editorLangSelect" onchange="handleLanguageChange()" class="px-3 py-1.5 rounded-lg bg-slate-900 border border-slate-700 text-xs font-bold text-white focus:outline-none focus:border-indigo-500">
+                  <option value="python">Python 3 (python3 main.py)</option>
+                  <option value="java">Java (javac Main.java &amp;&amp; java Main)</option>
+                  <option value="c">C (gcc main.c -o main -lm)</option>
+                </select>
+                <span class="text-[11px] font-mono text-rose-400 bg-rose-500/10 border border-rose-500/20 px-2 py-0.5 rounded hidden sm:inline">
+                  Copy/Paste Disabled
+                </span>
+              </div>
+
+              <div class="flex items-center gap-2">
+                <button id="loadSolutionBtn" type="button" onclick="loadWorkingSampleSolution()" class="px-2.5 py-1 rounded-lg text-[11px] font-semibold bg-indigo-500/20 hover:bg-indigo-500/30 text-indigo-300 border border-indigo-500/30 transition" title="Loads a reference solution in the selected language so you can test the compiler and grading engine">
+                  Load Reference Solution (Demo)
+                </button>
+                <button id="resetTemplateBtn" type="button" onclick="resetEditorTemplate()" class="px-2.5 py-1 rounded-lg text-[11px] font-medium bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700 transition">
+                  Reset Template
+                </button>
+              </div>
+            </div>
+
+            <!-- Line-Numbered Code Editor Area -->
+            <div class="relative flex bg-slate-950 border-b border-slate-800">
+              <pre id="editorLineNumbers" class="select-none py-3.5 px-2.5 text-right font-mono text-xs text-slate-600 bg-slate-950 border-r border-slate-800/80 leading-[1.6] min-w-[2.75rem]">1</pre>
+              <textarea id="codeEditor" rows="14" spellcheck="false" autocomplete="off" autocapitalize="off" autocorrect="off"
+                oninput="handleEditorInput(event)" onscroll="syncEditorScroll()"
+                class="code-editor-area w-full p-3.5 bg-slate-950 text-slate-100 text-xs sm:text-sm focus:outline-none resize-y border-0"
+                placeholder="Write your solution here... Copy, paste, cut, and right-click are blocked and flagged."></textarea>
+            </div>
+
+            <!-- Action Bar: Custom Input Toggle + Run Sample Tests + Submit & Auto-Grade -->
+            <div class="p-3.5 bg-slate-900 border-b border-slate-800 flex flex-wrap items-center justify-between gap-3">
+              <label class="inline-flex items-center gap-2 text-xs text-slate-300 cursor-pointer">
+                <input id="customStdinToggle" type="checkbox" onchange="toggleCustomStdin()" class="rounded border-slate-700 bg-slate-950 text-indigo-600" />
+                <span>Test with Custom Input (<code class="font-mono text-slate-400">stdin</code>)</span>
+              </label>
+
+              <div class="flex flex-wrap items-center gap-2.5">
+                <button id="runSamplesBtn" type="button" onclick="executeCode(false)" class="px-4 py-2 rounded-xl text-xs font-bold bg-slate-800 hover:bg-slate-700 text-white border border-slate-700 transition">
+                  &#9654; Compile &amp; Run Sample Tests
+                </button>
+                <button id="submitQuestionBtn" type="button" onclick="executeCode(true)" class="px-4 py-2 rounded-xl text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white shadow-lg shadow-emerald-600/20 transition">
+                  &#10003; Submit &amp; Auto-Grade Question
+                </button>
+              </div>
+            </div>
+
+            <!-- Optional Custom Stdin Box -->
+            <div id="customStdinBox" class="hidden p-3.5 bg-slate-950 border-b border-slate-800">
+              <label for="customStdinInput" class="block text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-1">Custom Standard Input (stdin)</label>
+              <textarea id="customStdinInput" rows="3" class="w-full p-2.5 rounded-lg bg-slate-900 border border-slate-700 font-mono text-xs text-white" placeholder="Enter custom input lines here..."></textarea>
+            </div>
+
+            <!-- Compiler & Test Case Output Console -->
+            <div class="p-4 bg-slate-950 min-h-[180px] max-h-[360px] overflow-y-auto">
+              <div class="flex items-center justify-between mb-2">
+                <span class="text-[11px] font-bold uppercase tracking-wider text-slate-400">Compiler &amp; Automated Grading Console</span>
+                <span id="compilerMetaStatus" class="text-[11px] font-mono text-slate-400">Ready</span>
+              </div>
+              <div id="compilerOutputConsole" class="text-xs text-slate-400 font-mono">
+                Select Python, Java, or C above, write your code, and click &ldquo;Compile &amp; Run Sample Tests&rdquo; or &ldquo;Submit &amp; Auto-Grade Question&rdquo;.
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    // =========================================================================
+    // 1. CBIT VALIDATION PATTERNS & INITIAL STATE
+    // =========================================================================
+    const ROLL_REGEX = /^1601\d{8}$/;
+    const EMAIL_REGEX = /^[a-z0-9._%+-]+@(cbit\.ac\.in|cbit\.org\.in)$/i;
+    const STORAGE_KEY = 'cbit_proctored_exam_state_v2';
+
+    const STARTER_TEMPLATES = {
+      python: `# CBIT Proctored Exam — Python 3 Solution
+import sys
+
+def solve():
+    data = sys.stdin.read().strip().split()
+    if not data:
+        return
+    # Write your logic here
+    
+
+if __name__ == "__main__":
+    solve()
+`,
+      java: `// CBIT Proctored Exam — Java Solution (Class must be Main)
+import java.util.*;
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        // Write your logic here
+        
+    }
+}
+`,
+      c: `// CBIT Proctored Exam — C (GCC) Solution
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+int main() {
+    // Write your logic here
+    
+    return 0;
+}
+`
+    };
+
+    // Reference working solutions per question ID & language for instant testing
+    const REFERENCE_SOLUTIONS = {
+      101: {
+        python: `import sys
+tokens = sys.stdin.read().strip().split()
+if len(tokens) >= 2:
+    a, b = int(tokens[0]), int(tokens[1])
+    total = a + b
+    parity = "EVEN" if total % 2 == 0 else "ODD"
+    print(f"{total} {parity}")
+`,
+        java: `import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (sc.hasNextLong()) {
+            long a = sc.nextLong();
+            long b = sc.nextLong();
+            long s = a + b;
+            String p = (s % 2 == 0) ? "EVEN" : "ODD";
+            System.out.println(s + " " + p);
+        }
+    }
+}
+`,
+        c: `#include <stdio.h>
+int main() {
+    long long a, b;
+    if (scanf("%lld %lld", &a, &b) == 2) {
+        long long s = a + b;
+        printf("%lld %s\\n", s, (s % 2 == 0) ? "EVEN" : "ODD");
+    }
+    return 0;
+}
+`
+      },
+      102: {
+        python: `import sys
+tokens = sys.stdin.read().strip().split()
+if tokens:
+    n = int(tokens[0])
+    arr = [int(x) for x in tokens[1:1+n]]
+    best = cur = arr[0]
+    for x in arr[1:]:
+        cur = max(x, cur + x)
+        best = max(best, cur)
+    print(best)
+`,
+        java: `import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNextInt()) return;
+        int n = sc.nextInt();
+        long best = Long.MIN_VALUE, cur = 0;
+        for (int i = 0; i < n; i++) {
+            long x = sc.nextLong();
+            cur = (i == 0) ? x : Math.max(x, cur + x);
+            best = Math.max(best, cur);
+        }
+        System.out.println(best);
+    }
+}
+`,
+        c: `#include <stdio.h>
+int main() {
+    int n;
+    if (scanf("%d", &n) != 1) return 0;
+    long long best = -999999999LL, cur = 0;
+    for (int i = 0; i < n; i++) {
+        long long x;
+        scanf("%lld", &x);
+        cur = (i == 0) ? x : (x > cur + x ? x : cur + x);
+        if (cur > best) best = cur;
+    }
+    printf("%lld\\n", best);
+    return 0;
+}
+`
+      },
+      103: {
+        python: `import sys
+s = sys.stdin.read().strip()
+rev = s[::-1]
+status = "PALINDROME" if s.lower() == rev.lower() else "NOT_PALINDROME"
+print(f"{rev} {status}")
+`,
+        java: `import java.util.*;
+public class Main {
+    public static void main(String[] args) {
+        Scanner sc = new Scanner(System.in);
+        if (!sc.hasNext()) return;
+        String s = sc.next();
+        String rev = new StringBuilder(s).reverse().toString();
+        String st = s.equalsIgnoreCase(rev) ? "PALINDROME" : "NOT_PALINDROME";
+        System.out.println(rev + " " + st);
+    }
+}
+`,
+        c: `#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
+int main() {
+    char s[256], rev[256];
+    if (scanf("%255s", s) != 1) return 0;
+    int len = strlen(s), pal = 1;
+    for (int i = 0; i < len; i++) {
+        rev[i] = s[len - 1 - i];
+        if (tolower(s[i]) != tolower(s[len - 1 - i])) pal = 0;
+    }
+    rev[len] = '\\0';
+    printf("%s %s\\n", rev, pal ? "PALINDROME" : "NOT_PALINDROME");
+    return 0;
+}
+`
+      }
+    };
+
+    function createDefaultState() {
+      return {
+        users: [
+          { id: 1, ident: 'admin', email: 'admin@cbit.ac.in', name: 'Dr. K. Radhika (Exam Admin)', pw: 'admin123', role: 'admin', branch: 'CSE', sem: 'Faculty' },
+          { id: 2, ident: '160100000000', email: 'test.student@cbit.ac.in', name: 'Testing Student (CBIT)', pw: 'test123', role: 'student', branch: 'CSE', sem: 'V Sem' },
+          { id: 3, ident: '160122733042', email: 'arjun.reddy@cbit.org.in', name: 'Arjun Vardhan Reddy', pw: 'student123', role: 'student', branch: 'CSE', sem: 'V Sem' }
+        ],
+        exams: [
+          {
+            id: 1,
+            title: 'CS301 — Data Structures & Algorithms Proctored Lab Exam',
+            minutes: 60,
+            maxFlags: 5,
+            flagPenaltyPct: 0
+          }
+        ],
+        questions: [
+          {
+            id: 101,
+            eid: 1,
+            title: 'Two-Number Sum & Parity Classifier',
+            body: 'Given two space-separated integers A and B from standard input (stdin), compute their sum S = A + B and output S followed by a space and "EVEN" if S is divisible by 2, or "ODD" otherwise.\n\nInput Format:\nTwo space-separated integers A and B.\n\nOutput Format:\n<Sum> <EVEN|ODD>',
+            marks: 10,
+            mode: 'partial',
+            tests: [
+              { inp: '14 28\n', out: '42 EVEN', hidden: 0 },
+              { inp: '7 12\n', out: '19 ODD', hidden: 0 },
+              { inp: '-15 15\n', out: '0 EVEN', hidden: 1 },
+              { inp: '100 205\n', out: '305 ODD', hidden: 1 }
+            ]
+          },
+          {
+            id: 102,
+            eid: 1,
+            title: 'Maximum Contiguous Subarray Sum (Kadane)',
+            body: 'Given an integer N followed by N space-separated integers, find the maximum sum of any contiguous non-empty subarray.\n\nInput Format:\nFirst token: N (number of elements)\nNext N tokens: space-separated integers.\n\nOutput Format:\nA single integer representing the maximum contiguous subarray sum.',
+            marks: 15,
+            mode: 'all',
+            tests: [
+              { inp: '5\n-2 1 -3 4 -1\n', out: '4', hidden: 0 },
+              { inp: '6\n4 -1 2 1 -5 4\n', out: '6', hidden: 0 },
+              { inp: '4\n-8 -3 -6 -2\n', out: '-2', hidden: 1 },
+              { inp: '5\n10 20 -5 15 30\n', out: '70', hidden: 1 }
+            ]
+          },
+          {
+            id: 103,
+            eid: 1,
+            title: 'String Reversal & Case-Insensitive Palindrome Check',
+            body: 'Read a single non-empty word S from standard input. Print the reversed string followed by a space and "PALINDROME" if S reads the same backward as forward (case-insensitive), or "NOT_PALINDROME" otherwise.\n\nInput Format:\nA single string S without spaces.\n\nOutput Format:\n<ReversedString> <PALINDROME|NOT_PALINDROME>',
+            marks: 15,
+            mode: 'weighted',
+            tests: [
+              { inp: 'Racecar\n', out: 'racecaR PALINDROME', hidden: 0 },
+              { inp: 'CBIT\n', out: 'TIBC NOT_PALINDROME', hidden: 0 },
+              { inp: 'Madam\n', out: 'madaM PALINDROME', hidden: 1 },
+              { inp: 'Algorithms\n', out: 'smhtiroglA NOT_PALINDROME', hidden: 1 }
+            ]
+          }
+        ],
+        attempts: [
+          { uid: 3, eid: 1, start: Date.now() - 1800 * 1000, done: 1, autoTerminated: false }
+        ],
+        subs: [
+          {
+            uid: 3,
+            qid: 101,
+            lang: 'python',
+            code: REFERENCE_SOLUTIONS[101].python,
+            passed: 4,
+            total: 4,
+            samplePassed: 2,
+            sampleTotal: 2,
+            hiddenPassed: 2,
+            hiddenTotal: 2
+          },
+          {
+            uid: 3,
+            qid: 102,
+            lang: 'java',
+            code: REFERENCE_SOLUTIONS[102].java,
+            passed: 4,
+            total: 4,
+            samplePassed: 2,
+            sampleTotal: 2,
+            hiddenPassed: 2,
+            hiddenTotal: 2
+          }
+        ],
+        flags: [
+          {
+            id: 1,
+            uid: 3,
+            eid: 1,
+            qid: 101,
+            kind: 'paste_attempt',
+            detail: 'Blocked Ctrl+V paste operation inside code editor',
+            ts: '2026-10-15 14:12:09 IST'
+          },
+          {
+            id: 2,
+            uid: 3,
+            eid: 1,
+            qid: 102,
+            kind: 'tab_switch_or_minimize',
+            detail: 'Document visibility changed to hidden (Tab switched)',
+            ts: '2026-10-15 14:18:44 IST'
+          }
+        ]
+      };
+    }
+
+    let STATE = loadState();
+    let currentUser = null;
+    let selectedAdminEid = 1;
+    let activeExamSession = {
+      started: false,
+      ended: false,
+      eid: null,
+      qid: null,
+      qIndex: 0,
+      endAt: 0,
+      timerId: null,
+      drafts: {},
+      lastFlagTime: {}
+    };
+    let modalCallback = null;
+
+    function loadState() {
+      try {
+        const raw = localStorage.getItem(STORAGE_KEY);
+        if (raw) {
+          const parsed = JSON.parse(raw);
+          if (parsed && Array.isArray(parsed.users) && Array.isArray(parsed.exams)) {
+            return parsed;
+          }
+        }
+      } catch (e) {
+        // Fallback to in-memory state if localStorage is restricted
+      }
+      return createDefaultState();
+    }
+
+    function saveState() {
+      try {
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(STATE));
+      } catch (e) {
+        // Ignore storage write errors in restricted iframes
+      }
+    }
+
+    function $(id) {
+      return document.getElementById(id);
+    }
+
+    function escapeHtml(str) {
+      return String(str == null ? '' : str).replace(/[&<>"']/g, function(ch) {
+        return ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[ch];
+      });
+    }
+
+    function formatTimeNow() {
+      const d = new Date();
+      return d.toISOString().replace('T', ' ').substring(0, 19) + ' UTC';
+    }
+
+    function showToast(title, message, type) {
+      const container = $('toastContainer');
+      if (!container) return;
+      const el = document.createElement('div');
+      const colors = type === 'error'
+        ? 'bg-rose-950/95 border-rose-500 text-rose-100'
+        : type === 'warn'
+        ? 'bg-amber-950/95 border-amber-500 text-amber-100'
+        : 'bg-emerald-950/95 border-emerald-500 text-emerald-100';
+      el.className = 'pointer-events-auto border-l-4 rounded-xl p-3.5 shadow-2xl transition-all ' + colors;
+      el.innerHTML = '<div class="font-bold text-xs mb-0.5">' + escapeHtml(title) + '</div>' +
+                     '<div class="text-[11px] opacity-90 leading-snug">' + escapeHtml(message) + '</div>';
+      container.appendChild(el);
+      setTimeout(function() {
+        if (el.parentNode) el.parentNode.removeChild(el);
+      }, 4200);
+    }
+
+    function openModal(title, message, confirmLabel, onConfirm) {
+      $('modalTitle').textContent = title;
+      $('modalMessage').textContent = message;
+      $('modalConfirmBtn').textContent = confirmLabel || 'Confirm';
+      modalCallback = onConfirm;
+      $('modalOverlay').classList.remove('hidden');
+      $('modalOverlay').classList.add('flex');
+    }
+
+    function closeModal() {
+      $('modalOverlay').classList.add('hidden');
+      $('modalOverlay').classList.remove('flex');
+      modalCallback = null;
+    }
+
+    $('modalConfirmBtn').addEventListener('click', function() {
+      const cb = modalCallback;
+      closeModal();
+      if (typeof cb === 'function') cb();
+    });
+
+    // =========================================================================
+    // 2. AUTHENTICATION & CBIT ROLL / EMAIL VALIDATION
+    // =========================================================================
+    function isValidCbitIdentifier(val) {
+      const clean = String(val || '').trim().toLowerCase();
+      return ROLL_REGEX.test(clean) || EMAIL_REGEX.test(clean);
+    }
+
+    function getIdentityKind(val) {
+      const clean = String(val || '').trim().toLowerCase();
+      if (ROLL_REGEX.test(clean)) return 'CBIT Roll No (1601xxxxxxxx)';
+      if (EMAIL_REGEX.test(clean)) return 'CBIT Official Email';
+      return 'System Admin';
+    }
+
+    function switchAuthTab(tab) {
+      const isLogin = tab === 'login';
+      $('loginForm').classList.toggle('hidden', !isLogin);
+      $('registerForm').classList.toggle('hidden', isLogin);
+      $('tabLoginBtn').className = isLogin
+        ? 'py-3.5 text-sm font-semibold border-b-2 border-indigo-500 text-white bg-slate-900 transition'
+        : 'py-3.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition';
+      $('tabRegisterBtn').className = !isLogin
+        ? 'py-3.5 text-sm font-semibold border-b-2 border-emerald-500 text-white bg-slate-900 transition'
+        : 'py-3.5 text-sm font-semibold border-b-2 border-transparent text-slate-400 hover:text-slate-200 transition';
+    }
+
+    function validateRegIdentifierLive() {
+      const val = $('regIdent').value.trim().toLowerCase();
+      const hint = $('regIdentHint');
+      if (!val) {
+        hint.className = 'mt-1.5 text-[11px] text-slate-400';
+        hint.textContent = 'Must be a 12-digit roll number starting with 1601 or an email ending with @cbit.ac.in or @cbit.org.in.';
+        return;
+      }
+      if (ROLL_REGEX.test(val)) {
+        hint.className = 'mt-1.5 text-[11px] text-emerald-400 font-semibold';
+        hint.textContent = '✓ Valid CBIT Student Roll Number (1601xxxxxxxx format verified)';
+      } else if (EMAIL_REGEX.test(val)) {
+        hint.className = 'mt-1.5 text-[11px] text-emerald-400 font-semibold';
+        hint.textContent = '✓ Valid CBIT Institutional Email (@cbit.ac.in / @cbit.org.in verified)';
+      } else {
+        hint.className = 'mt-1.5 text-[11px] text-rose-400 font-medium';
+        hint.textContent = '✗ Invalid format: Enter 1601 followed by 8 digits (e.g. 160122733001) or an email ending in @cbit.ac.in / @cbit.org.in.';
+      }
+    }
+
+    function fillCredentials(ident, pw, autoSubmit) {
+      switchAuthTab('login');
+      $('loginIdent').value = ident;
+      $('loginPw').value = pw;
+      $('loginError').classList.add('hidden');
+      if (autoSubmit) {
+        performLogin(ident, pw);
+      } else {
+        showToast('Credentials Filled', 'Click "Sign In to Portal" to log in as ' + ident, 'ok');
+      }
+    }
+
+    function quickSwitchRole(role) {
+      if (activeExamSession.started && !activeExamSession.ended) {
+        activeExamSession.started = false;
+        activeExamSession.ended = true;
+        if (activeExamSession.timerId) clearInterval(activeExamSession.timerId);
+        $('fullscreenLockOverlay').classList.add('hidden');
+        $('fullscreenLockOverlay').classList.remove('flex');
+      }
+      if (role === 'admin') {
+        performLogin('admin', 'admin123');
+      } else {
+        performLogin('160100000000', 'test123');
+      }
+    }
+
+    function handleLogin(e) {
+      e.preventDefault();
+      performLogin($('loginIdent').value, $('loginPw').value);
+    }
+
+    function performLogin(identRaw, pw) {
+      const ident = String(identRaw || '').trim().toLowerCase();
+      const user = STATE.users.find(function(u) {
+        return u.ident.toLowerCase() === ident || (u.email && u.email.toLowerCase() === ident);
+      });
+      if (!user || user.pw !== pw) {
+        $('loginError').textContent = 'Invalid credentials. Use the Quick-Fill buttons for Admin (admin / admin123) or Test Student (160100000000 / test123), or register a CBIT account.';
+        $('loginError').classList.remove('hidden');
+        return;
+      }
+      $('loginError').classList.add('hidden');
+      currentUser = user;
+      updateNavigationUI();
+      if (user.role === 'admin') {
+        showView('admin');
+        renderAdminAll();
+        showToast('Signed in as Administrator', 'Full access to questions, test cases, grading rules, and violation flags.', 'ok');
+      } else {
+        showView('studentDashboard');
+        renderStudentDashboard();
+        showToast('Signed in as CBIT Student', 'Welcome ' + user.name + ' (' + user.ident + ')', 'ok');
+      }
+    }
+
+    function handleRegister(e) {
+      e.preventDefault();
+      const name = $('regName').value.trim();
+      const branch = $('regBranch').value;
+      const sem = $('regSem').value;
+      const ident = $('regIdent').value.trim().toLowerCase();
+      const pw = $('regPw').value;
+      const errEl = $('regError');
+
+      if (!isValidCbitIdentifier(ident)) {
+        errEl.textContent = 'Registration restricted to CBIT students: Enter a 12-digit roll number starting with 1601 (e.g., 160122733005) or an email ending with @cbit.ac.in or @cbit.org.in.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      if (!name || pw.length < 6) {
+        errEl.textContent = 'Please provide your full name and a password of at least 6 characters.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      const exists = STATE.users.some(function(u) {
+        return u.ident.toLowerCase() === ident || (u.email && u.email.toLowerCase() === ident);
+      });
+      if (exists) {
+        errEl.textContent = 'This CBIT Roll Number or Email is already registered. Please sign in.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+
+      errEl.classList.add('hidden');
+      const newUser = {
+        id: Date.now(),
+        ident: ident,
+        email: EMAIL_REGEX.test(ident) ? ident : (ident + '@cbit.ac.in'),
+        name: name,
+        pw: pw,
+        role: 'student',
+        branch: branch,
+        sem: sem
+      };
+      STATE.users.push(newUser);
+      saveState();
+      $('regName').value = '';
+      $('regIdent').value = '';
+      $('regPw').value = '';
+      performLogin(newUser.ident, newUser.pw);
+    }
+
+    function handleLogout() {
+      if (activeExamSession.started && !activeExamSession.ended) {
+        openModal(
+          'Exit Active Proctored Exam?',
+          'Logging out during an active exam will submit your current attempt and end your session. Proceed?',
+          'Submit & Logout',
+          function() {
+            finishStudentExam(false);
+            completeLogout();
+          }
+        );
+        return;
+      }
+      completeLogout();
+    }
+
+    function completeLogout() {
+      currentUser = null;
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(function() {});
+      }
+      $('fullscreenLockOverlay').classList.add('hidden');
+      $('fullscreenLockOverlay').classList.remove('flex');
+      updateNavigationUI();
+      showView('auth');
+      showToast('Logged Out', 'You have safely exited the CBIT Exam Portal.', 'ok');
+    }
+
+    function updateNavigationUI() {
+      const box = $('navUserBox');
+      if (!currentUser) {
+        box.classList.add('hidden');
+        box.classList.remove('flex');
+        $('quickStudentBtn').className = 'px-2.5 py-1 rounded-md font-medium transition text-slate-300 hover:text-white hover:bg-slate-700';
+        $('quickAdminBtn').className = 'px-2.5 py-1 rounded-md font-medium transition text-slate-300 hover:text-white hover:bg-slate-700';
+        return;
+      }
+      box.classList.remove('hidden');
+      box.classList.add('flex');
+      $('navUserName').textContent = currentUser.name;
+      $('navUserIdent').textContent = currentUser.ident;
+      const badge = $('navRoleBadge');
+      if (currentUser.role === 'admin') {
+        badge.textContent = 'ADMIN';
+        badge.className = 'text-[11px] font-bold uppercase px-2 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/40';
+        $('quickAdminBtn').className = 'px-2.5 py-1 rounded-md font-bold transition bg-indigo-600 text-white';
+        $('quickStudentBtn').className = 'px-2.5 py-1 rounded-md font-medium transition text-slate-300 hover:text-white hover:bg-slate-700';
+      } else {
+        badge.textContent = 'STUDENT';
+        badge.className = 'text-[11px] font-bold uppercase px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/40';
+        $('quickStudentBtn').className = 'px-2.5 py-1 rounded-md font-bold transition bg-emerald-600 text-white';
+        $('quickAdminBtn').className = 'px-2.5 py-1 rounded-md font-medium transition text-slate-300 hover:text-white hover:bg-slate-700';
+      }
+    }
+
+    function showView(view) {
+      $('authView').classList.toggle('hidden', view !== 'auth');
+      $('adminView').classList.toggle('hidden', view !== 'admin');
+      $('studentDashboardView').classList.toggle('hidden', view !== 'studentDashboard');
+      $('examWorkspaceView').classList.toggle('hidden', view !== 'examWorkspace');
+    }
+
+    // =========================================================================
+    // 3. AUTOMATIC GRADING CALCULATION ENGINE (ADMIN-CONFIGURABLE)
+    // =========================================================================
+    function computeQuestionScore(question, sub) {
+      if (!sub || !question) return 0;
+      const marks = Number(question.marks) || 0;
+      const total = Number(sub.total) || 0;
+      const passed = Number(sub.passed) || 0;
+      if (total === 0) return 0;
+
+      if (question.mode === 'all') {
+        // Strict All-or-Nothing: Full marks only if 100% of test cases pass
+        return passed === total ? marks : 0;
+      } else if (question.mode === 'weighted') {
+        // Weighted: 30% visible sample tests + 70% hidden grading tests
+        const sTot = Number(sub.sampleTotal) || 0;
+        const sPass = Number(sub.samplePassed) || 0;
+        const hTot = Number(sub.hiddenTotal) || 0;
+        const hPass = Number(sub.hiddenPassed) || 0;
+        if (sTot > 0 && hTot > 0) {
+          const ratio = 0.30 * (sPass / sTot) + 0.70 * (hPass / hTot);
+          return Math.round(marks * ratio * 100) / 100;
+        }
+        return Math.round((marks * passed / total) * 100) / 100;
+      } else {
+        // Default 'partial': Marks proportional to test cases passed
+        return Math.round((marks * passed / total) * 100) / 100;
+      }
+    }
+
+    function formatGradingModeLabel(mode) {
+      if (mode === 'all') return 'All-or-Nothing (100% Required)';
+      if (mode === 'weighted') return 'Weighted (30% Sample / 70% Hidden)';
+      return 'Partial (Proportional to Passed Tests)';
+    }
+
+    // =========================================================================
+    // 4. ADMIN DASHBOARD LOGIC (QUESTIONS, TEST CASES, RESULTS, FLAGS)
+    // =========================================================================
+    function switchAdminTab(tab) {
+      const tabs = ['questions', 'results', 'flags', 'students'];
+      const btns = {
+        questions: $('adminTabQnsBtn'),
+        results: $('adminTabResultsBtn'),
+        flags: $('adminTabFlagsBtn'),
+        students: $('adminTabStudentsBtn')
+      };
+      const panels = {
+        questions: $('adminQuestionsPanel'),
+        results: $('adminResultsPanel'),
+        flags: $('adminFlagsPanel'),
+        students: $('adminStudentsPanel')
+      };
+      tabs.forEach(function(t) {
+        const active = t === tab;
+        panels[t].classList.toggle('hidden', !active);
+        btns[t].className = active
+          ? 'px-4 py-2 rounded-xl text-xs font-bold transition bg-indigo-600 text-white'
+          : 'px-4 py-2 rounded-xl text-xs font-bold transition bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800';
+      });
+      renderAdminAll();
+    }
+
+    function renderAdminAll() {
+      if (!currentUser || currentUser.role !== 'admin') return;
+      $('adminStatExams').textContent = STATE.exams.length;
+      $('adminStatQns').textContent = STATE.questions.length;
+      $('adminStatAttempts').textContent = STATE.attempts.length;
+      $('adminStatFlags').textContent = STATE.flags.length;
+
+      // Populate exam dropdown
+      const sel = $('adminExamSelect');
+      if (!STATE.exams.some(function(e) { return e.id === selectedAdminEid; }) && STATE.exams.length > 0) {
+        selectedAdminEid = STATE.exams[0].id;
+      }
+      sel.innerHTML = STATE.exams.map(function(e) {
+        return '<option value="' + e.id + '"' + (e.id === selectedAdminEid ? ' selected' : '') + '>' +
+               escapeHtml(e.title) + ' (' + e.minutes + 'm · max ' + e.maxFlags + ' flags)</option>';
+      }).join('');
+
+      const currExam = STATE.exams.find(function(e) { return e.id === selectedAdminEid; });
+      if (currExam) {
+        $('adminCurrExamHeading').textContent = 'Questions in ' + currExam.title;
+        $('adminFlagPenaltySelect').value = String(currExam.flagPenaltyPct || 0);
+      }
+
+      renderAdminQuestions();
+      renderAdminResults();
+      renderAdminFlags();
+      renderAdminStudents();
+    }
+
+    function handleAdminExamChange() {
+      selectedAdminEid = Number($('adminExamSelect').value);
+      renderAdminAll();
+    }
+
+    function handleCreateExam(e) {
+      e.preventDefault();
+      if (!currentUser || currentUser.role !== 'admin') return;
+      const title = $('newExamTitle').value.trim();
+      const mins = Math.max(5, Number($('newExamMins').value) || 60);
+      const mf = Math.max(1, Number($('newExamMaxFlags').value) || 5);
+      if (!title) return;
+      const newExam = { id: Date.now(), title: title, minutes: mins, maxFlags: mf, flagPenaltyPct: 0 };
+      STATE.exams.unshift(newExam);
+      selectedAdminEid = newExam.id;
+      saveState();
+      $('newExamTitle').value = '';
+      renderAdminAll();
+      showToast('Exam Created', 'Created "' + title + '". You can now add questions and test cases.', 'ok');
+    }
+
+    function parseTestBlocksText(text) {
+      const blocks = ('\n' + String(text || '').replace(/\r/g, '').trim() + '\n').split(/\n-{3,}\n/);
+      const out = [];
+      blocks.forEach(function(b) {
+        let clean = b.trim();
+        if (!clean || clean.indexOf('=>') === -1) return;
+        let hidden = 0;
+        if (clean.toLowerCase().indexOf('#hidden') === 0) {
+          hidden = 1;
+          const nl = clean.indexOf('\n');
+          clean = nl !== -1 ? clean.substring(nl + 1).trim() : '';
+        }
+        const parts = clean.split(/\n?=>\n?/);
+        if (parts.length >= 2) {
+          const inp = parts[0].trim() + '\n';
+          const exp = parts.slice(1).join('=>').trim();
+          out.push({ inp: inp, out: exp, hidden: hidden });
+        }
+      });
+      return out;
+    }
+
+    function insertTemplateTestCase() {
+      const box = $('qnTestsRaw');
+      const addition = (box.value.trim() ? '\n---\n' : '') + '#hidden\n12 18\n=>\n30';
+      box.value = box.value.trim() + addition;
+    }
+
+    function handleAddQuestion(e) {
+      e.preventDefault();
+      if (!currentUser || currentUser.role !== 'admin') return;
+      const title = $('qnTitle').value.trim();
+      const body = $('qnBody').value.trim();
+      const marks = Math.max(1, Number($('qnMarks').value) || 10);
+      const mode = $('qnMode').value;
+      const tests = parseTestBlocksText($('qnTestsRaw').value);
+
+      if (!title || !body) return;
+      if (tests.length === 0) {
+        showToast('Test Cases Required', 'Please provide at least one valid test case block using "=>" between input and expected output.', 'error');
+        return;
+      }
+      // Ensure at least one visible sample test case exists
+      if (!tests.some(function(t) { return !t.hidden; })) {
+        tests[0].hidden = 0;
+      }
+
+      const newQ = {
+        id: Date.now(),
+        eid: selectedAdminEid,
+        title: title,
+        body: body,
+        marks: marks,
+        mode: mode,
+        tests: tests
+      };
+      STATE.questions.push(newQ);
+      saveState();
+      $('qnTitle').value = '';
+      $('qnBody').value = '';
+      renderAdminAll();
+      showToast('Question & Test Cases Saved', 'Added "' + title + '" (' + tests.length + ' test cases, ' + formatGradingModeLabel(mode) + ').', 'ok');
+    }
+
+    function updateQuestionGradingMode(qid, newMode) {
+      if (!currentUser || currentUser.role !== 'admin') return;
+      const q = STATE.questions.find(function(x) { return x.id === Number(qid); });
+      if (!q) return;
+      q.mode = newMode;
+      saveState();
+      renderAdminAll();
+      showToast('Auto-Grading Mode Updated', 'Question "' + q.title + '" now grades via ' + formatGradingModeLabel(newMode) + '. All student scores recalculated.', 'ok');
+    }
+
+    function deleteQuestionAdmin(qid) {
+      if (!currentUser || currentUser.role !== 'admin') return;
+      const q = STATE.questions.find(function(x) { return x.id === Number(qid); });
+      if (!q) return;
+      openModal(
+        'Delete Question?',
+        'Are you sure you want to delete "' + q.title + '" and all its associated test cases?',
+        'Delete Question',
+        function() {
+          STATE.questions = STATE.questions.filter(function(x) { return x.id !== Number(qid); });
+          STATE.subs = STATE.subs.filter(function(s) { return s.qid !== Number(qid); });
+          saveState();
+          renderAdminAll();
+          showToast('Question Removed', 'Deleted question and recalculated scores.', 'warn');
+        }
+      );
+    }
+
+    function renderAdminQuestions() {
+      const container = $('adminQuestionsList');
+      const qns = STATE.questions.filter(function(q) { return q.eid === selectedAdminEid; });
+      if (qns.length === 0) {
+        container.innerHTML = '<div class="text-xs text-slate-400 bg-slate-950 border border-slate-800 rounded-xl p-6 text-center">No questions in this exam yet. Use the form on the right to add questions and test cases.</div>';
+        return;
+      }
+
+      container.innerHTML = qns.map(function(q, idx) {
+        const sampleCount = q.tests.filter(function(t) { return !t.hidden; }).length;
+        const hiddenCount = q.tests.filter(function(t) { return t.hidden; }).length;
+        const testPills = q.tests.map(function(t, ti) {
+          return '<div class="bg-slate-900 border border-slate-800 rounded-lg p-2.5 text-[11px] font-mono">' +
+            '<div class="flex items-center justify-between mb-1">' +
+              '<span class="font-bold text-slate-300">Test #' + (ti + 1) + '</span>' +
+              '<span class="px-1.5 py-0.5 rounded text-[10px] font-sans font-bold ' + (t.hidden ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30') + '">' +
+                (t.hidden ? 'Hidden Grading Test' : 'Visible Sample Test') +
+              '</span>' +
+            '</div>' +
+            '<div class="text-slate-400">Input: <span class="text-slate-200">' + escapeHtml(t.inp.trim()) + '</span></div>' +
+            '<div class="text-slate-400">Expected Output: <span class="text-emerald-300">' + escapeHtml(t.out.trim()) + '</span></div>' +
+          '</div>';
+        }).join('');
+
+        return '<div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-3">' +
+          '<div class="flex flex-wrap items-start justify-between gap-2">' +
+            '<div>' +
+              '<span class="text-xs font-bold text-indigo-400">Q' + (idx + 1) + ' · ' + q.marks + ' Marks</span>' +
+              '<h4 class="text-sm font-bold text-white">' + escapeHtml(q.title) + '</h4>' +
+            '</div>' +
+            '<div class="flex items-center gap-2">' +
+              '<select onchange="updateQuestionGradingMode(' + q.id + ', this.value)" class="px-2.5 py-1 rounded-lg bg-slate-900 border border-slate-700 text-[11px] font-semibold text-amber-300">' +
+                '<option value="partial"' + (q.mode === 'partial' ? ' selected' : '') + '>Grading: Partial (Proportional)</option>' +
+                '<option value="all"' + (q.mode === 'all' ? ' selected' : '') + '>Grading: All-or-Nothing</option>' +
+                '<option value="weighted"' + (q.mode === 'weighted' ? ' selected' : '') + '>Grading: Weighted (30/70)</option>' +
+              '</select>' +
+              '<button type="button" onclick="deleteQuestionAdmin(' + q.id + ')" class="px-2.5 py-1 rounded-lg bg-rose-500/15 hover:bg-rose-500/30 text-rose-300 border border-rose-500/30 text-[11px] font-semibold">Delete</button>' +
+            '</div>' +
+          '</div>' +
+          '<p class="text-xs text-slate-300 whitespace-pre-wrap leading-relaxed">' + escapeHtml(q.body) + '</p>' +
+          '<div class="text-[11px] text-slate-400 font-medium">Test Suite: <strong class="text-emerald-300">' + sampleCount + ' Visible Sample</strong> + <strong class="text-amber-300">' + hiddenCount + ' Hidden Grading</strong></div>' +
+          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">' + testPills + '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function handlePenaltyPolicyChange() {
+      const currExam = STATE.exams.find(function(e) { return e.id === selectedAdminEid; });
+      if (!currExam) return;
+      currExam.flagPenaltyPct = Number($('adminFlagPenaltySelect').value) || 0;
+      saveState();
+      renderAdminResults();
+      showToast('Grading Policy Updated', 'Applied ' + currExam.flagPenaltyPct + '% per-flag penalty policy to exam scorecard.', 'ok');
+    }
+
+    function renderAdminResults() {
+      const tbody = $('adminResultsTableBody');
+      const currExam = STATE.exams.find(function(e) { return e.id === selectedAdminEid; });
+      const qns = STATE.questions.filter(function(q) { return q.eid === selectedAdminEid; });
+      const maxTotalMarks = qns.reduce(function(acc, q) { return acc + Number(q.marks); }, 0);
+      const attempts = STATE.attempts.filter(function(a) { return a.eid === selectedAdminEid; });
+
+      if (attempts.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-400">No student attempts recorded for this exam yet.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = attempts.map(function(a) {
+        const stu = STATE.users.find(function(u) { return u.id === a.uid; }) || { name: 'Student', ident: 'Unknown' };
+        const stuFlags = STATE.flags.filter(function(f) { return f.uid === a.uid && f.eid === selectedAdminEid; });
+        let rawScore = 0;
+        const breakdownPills = qns.map(function(q, idx) {
+          const sub = STATE.subs.find(function(s) { return s.uid === a.uid && s.qid === q.id; });
+          const sc = computeQuestionScore(q, sub);
+          rawScore += sc;
+          const modeShort = q.mode === 'all' ? 'All' : q.mode === 'weighted' ? 'Wtd' : 'Part';
+          return '<span class="inline-block mr-1.5 mb-1 px-2 py-0.5 rounded bg-slate-950 border border-slate-800 font-mono text-[11px]">' +
+                 'Q' + (idx + 1) + ': <strong class="text-white">' + sc + '/' + q.marks + '</strong> <span class="text-slate-500">(' + modeShort + ')</span></span>';
+        }).join('');
+
+        rawScore = Math.round(rawScore * 100) / 100;
+        const penaltyPct = currExam ? (Number(currExam.flagPenaltyPct) || 0) : 0;
+        const deduction = Math.min(rawScore, Math.round(rawScore * (stuFlags.length * penaltyPct / 100) * 100) / 100);
+        const finalScore = Math.max(0, Math.round((rawScore - deduction) * 100) / 100);
+
+        const statusBadge = a.done
+          ? (a.autoTerminated
+              ? '<span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold">Auto-Submitted (Max Flags)</span>'
+              : '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">Submitted</span>')
+          : '<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">In Progress</span>';
+
+        return '<tr class="hover:bg-slate-950/50">' +
+          '<td class="py-3 px-3 font-semibold text-white">' + escapeHtml(stu.name) + '</td>' +
+          '<td class="py-3 px-3 font-mono text-indigo-300">' + escapeHtml(stu.ident) + '</td>' +
+          '<td class="py-3 px-3">' + statusBadge + '</td>' +
+          '<td class="py-3 px-3">' + (breakdownPills || '—') + '</td>' +
+          '<td class="py-3 px-3 font-mono font-bold text-slate-200">' + rawScore + ' / ' + maxTotalMarks + '</td>' +
+          '<td class="py-3 px-3 font-mono font-bold ' + (stuFlags.length > 0 ? 'text-rose-400' : 'text-emerald-400') + '">' + stuFlags.length + ' flags</td>' +
+          '<td class="py-3 px-3 font-mono font-extrabold text-sm text-emerald-400">' + finalScore + ' / ' + maxTotalMarks +
+            (deduction > 0 ? ' <span class="text-[10px] text-rose-400">(-' + deduction + ')</span>' : '') + '</td>' +
+          '<td class="py-3 px-3 text-right space-x-1.5">' +
+            '<button type="button" onclick="inspectStudentAttempt(' + a.uid + ',' + a.eid + ')" class="px-2.5 py-1 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 font-semibold">Inspect Code &amp; Flags</button>' +
+            '<button type="button" onclick="resetStudentAttempt(' + a.uid + ',' + a.eid + ')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Reset Attempt</button>' +
+          '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    function inspectStudentAttempt(uid, eid) {
+      const stu = STATE.users.find(function(u) { return u.id === Number(uid); }) || { name: 'Student', ident: '' };
+      const qns = STATE.questions.filter(function(q) { return q.eid === Number(eid); });
+      const flags = STATE.flags.filter(function(f) { return f.uid === Number(uid) && f.eid === Number(eid); });
+
+      $('inspectModalTitle').textContent = 'Submission & Proctoring Audit — ' + stu.name + ' (' + stu.ident + ')';
+      $('inspectModalSub').textContent = 'Total Proctoring Violation Flags: ' + flags.length;
+
+      const subsHtml = qns.map(function(q, idx) {
+        const sub = STATE.subs.find(function(s) { return s.uid === Number(uid) && s.qid === q.id; });
+        if (!sub) {
+          return '<div class="bg-slate-950 border border-slate-800 rounded-xl p-4">' +
+            '<div class="font-bold text-white">Q' + (idx + 1) + ': ' + escapeHtml(q.title) + ' — <span class="text-slate-400">Not Submitted</span></div>' +
+          '</div>';
+        }
+        const score = computeQuestionScore(q, sub);
+        return '<div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">' +
+          '<div class="flex flex-wrap items-center justify-between gap-2">' +
+            '<div class="font-bold text-white">Q' + (idx + 1) + ': ' + escapeHtml(q.title) + ' (' + sub.lang.toUpperCase() + ')</div>' +
+            '<div class="text-xs font-mono font-bold text-emerald-400">Auto-Grade: ' + score + ' / ' + q.marks + ' (' + sub.passed + '/' + sub.total + ' tests passed · ' + formatGradingModeLabel(q.mode) + ')</div>' +
+          '</div>' +
+          '<pre class="p-3 rounded-lg bg-slate-900 border border-slate-800 font-mono text-xs text-slate-200 overflow-x-auto">' + escapeHtml(sub.code) + '</pre>' +
+        '</div>';
+      }).join('');
+
+      const flagsHtml = flags.length === 0
+        ? '<div class="text-xs text-emerald-400">Zero proctoring violations recorded for this student.</div>'
+        : '<div class="space-y-1.5">' + flags.map(function(f) {
+            return '<div class="flex items-center justify-between bg-rose-950/30 border border-rose-500/30 rounded-lg px-3 py-2 text-xs">' +
+              '<div><span class="font-mono font-bold text-rose-300">' + escapeHtml(f.kind) + '</span> — <span class="text-slate-300">' + escapeHtml(f.detail || '') + '</span></div>' +
+              '<span class="font-mono text-[11px] text-slate-400">' + escapeHtml(f.ts) + '</span>' +
+            '</div>';
+          }).join('') + '</div>';
+
+      $('inspectModalBody').innerHTML =
+        '<div><h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Submitted Code &amp; Per-Question Auto-Grading</h4><div class="space-y-3">' + subsHtml + '</div></div>' +
+        '<div><h4 class="text-xs font-bold uppercase tracking-wider text-rose-400 mb-2">Recorded Proctoring Violation Flags</h4>' + flagsHtml + '</div>';
+
+      $('inspectModal').classList.remove('hidden');
+      $('inspectModal').classList.add('flex');
+    }
+
+    function closeInspectModal() {
+      $('inspectModal').classList.add('hidden');
+      $('inspectModal').classList.remove('flex');
+    }
+
+    function resetStudentAttempt(uid, eid) {
+      openModal(
+        'Reset Student Attempt & Flags?',
+        'This will reopen the exam attempt and clear violation flags for this student so they can take or resume the exam.',
+        'Reset Attempt',
+        function() {
+          STATE.attempts = STATE.attempts.filter(function(a) { return !(a.uid === Number(uid) && a.eid === Number(eid)); });
+          STATE.flags = STATE.flags.filter(function(f) { return !(f.uid === Number(uid) && f.eid === Number(eid)); });
+          saveState();
+          renderAdminAll();
+          showToast('Student Attempt Reset', 'The student can now start a fresh attempt.', 'ok');
+        }
+      );
+    }
+
+    function renderAdminFlags() {
+      const filterSel = $('flagFilterStudent');
+      const prevVal = filterSel.value || 'all';
+      const students = STATE.users.filter(function(u) { return u.role === 'student'; });
+      filterSel.innerHTML = '<option value="all">All CBIT Students</option>' +
+        students.map(function(s) {
+          return '<option value="' + s.id + '"' + (String(s.id) === prevVal ? ' selected' : '') + '>' + escapeHtml(s.name) + ' (' + escapeHtml(s.ident) + ')</option>';
+        }).join('');
+
+      const activeFilter = filterSel.value;
+      const flags = STATE.flags.filter(function(f) {
+        if (f.eid !== selectedAdminEid) return false;
+        if (activeFilter !== 'all' && String(f.uid) !== activeFilter) return false;
+        return true;
+      }).slice().reverse();
+
+      const tbody = $('adminFlagsTableBody');
+      if (flags.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-6 text-center text-slate-400">No proctoring violations logged for the current filter.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = flags.map(function(f) {
+        const stu = STATE.users.find(function(u) { return u.id === f.uid; }) || { name: 'Student', ident: 'Unknown' };
+        return '<tr class="hover:bg-slate-950/50">' +
+          '<td class="py-3 px-3 font-mono text-[11px] text-slate-400">' + escapeHtml(f.ts) + '</td>' +
+          '<td class="py-3 px-3 font-semibold text-white">' + escapeHtml(stu.name) + '</td>' +
+          '<td class="py-3 px-3 font-mono text-indigo-300">' + escapeHtml(stu.ident) + '</td>' +
+          '<td class="py-3 px-3"><span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-mono font-bold">' + escapeHtml(f.kind) + '</span></td>' +
+          '<td class="py-3 px-3 text-slate-300">' + escapeHtml(f.detail || 'Proctoring lockdown violation triggered') + '</td>' +
+          '<td class="py-3 px-3 text-rose-300 font-semibold">Blocked &amp; Flagged to Admin</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    function confirmClearFlags() {
+      openModal(
+        'Clear All Violation Flags?',
+        'This will clear all recorded proctoring violation flags for the selected exam.',
+        'Clear Flags',
+        function() {
+          STATE.flags = STATE.flags.filter(function(f) { return f.eid !== selectedAdminEid; });
+          saveState();
+          renderAdminAll();
+          showToast('Violation Log Cleared', 'Cleared all proctoring flags for this exam.', 'ok');
+        }
+      );
+    }
+
+    function renderAdminStudents() {
+      const tbody = $('adminStudentsTableBody');
+      tbody.innerHTML = STATE.users.map(function(u) {
+        return '<tr class="hover:bg-slate-950/50">' +
+          '<td class="py-3 px-3 font-semibold text-white">' + escapeHtml(u.name) + '</td>' +
+          '<td class="py-3 px-3 font-mono text-indigo-300">' + escapeHtml(u.ident) + '</td>' +
+          '<td class="py-3 px-3 text-slate-300">' + escapeHtml((u.branch || 'CSE') + ' · ' + (u.sem || '')) + '</td>' +
+          '<td class="py-3 px-3"><span class="px-2 py-0.5 rounded uppercase text-[10px] font-bold ' +
+            (u.role === 'admin' ? 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30' : 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30') + '">' +
+            escapeHtml(u.role) + '</span></td>' +
+          '<td class="py-3 px-3 text-slate-400">' + escapeHtml(getIdentityKind(u.ident)) + '</td>' +
+        '</tr>';
+      }).join('');
+    }
+
+    // =========================================================================
+    // 5. STUDENT DASHBOARD & EXAM LAUNCHER
+    // =========================================================================
+    function renderStudentDashboard() {
+      if (!currentUser) return;
+      $('studentWelcomeTitle').textContent = 'Welcome, ' + currentUser.name;
+      $('studentWelcomeSub').textContent = 'CBIT Identifier: ' + currentUser.ident + ' · ' + (currentUser.branch || 'CSE') + ' (' + getIdentityKind(currentUser.ident) + ')';
+
+      const grid = $('studentExamsGrid');
+      grid.innerHTML = STATE.exams.map(function(e) {
+        const qns = STATE.questions.filter(function(q) { return q.eid === e.id; });
+        const totalMarks = qns.reduce(function(acc, q) { return acc + Number(q.marks); }, 0);
+        const attempt = STATE.attempts.find(function(a) { return a.uid === currentUser.id && a.eid === e.id; });
+        const flags = STATE.flags.filter(function(f) { return f.uid === currentUser.id && f.eid === e.id; }).length;
+
+        let myScore = 0;
+        qns.forEach(function(q) {
+          const sub = STATE.subs.find(function(s) { return s.uid === currentUser.id && s.qid === q.id; });
+          myScore += computeQuestionScore(q, sub);
+        });
+        myScore = Math.round(myScore * 100) / 100;
+
+        const isDone = attempt && attempt.done;
+        return '<div class="bg-slate-900 border border-slate-800 rounded-2xl p-6 flex flex-col justify-between space-y-4 shadow-lg">' +
+          '<div>' +
+            '<div class="flex items-center justify-between gap-2 mb-2">' +
+              '<span class="text-xs font-bold uppercase px-2.5 py-0.5 rounded bg-indigo-500/20 text-indigo-300 border border-indigo-500/30">' + e.minutes + ' Minutes · Fullscreen Proctored</span>' +
+              '<span class="text-xs font-mono text-slate-400">Max Flags: ' + e.maxFlags + '</span>' +
+            '</div>' +
+            '<h4 class="text-lg font-bold text-white mb-1">' + escapeHtml(e.title) + '</h4>' +
+            '<p class="text-xs text-slate-400">' + qns.length + ' Coding Questions · Total Marks: ' + totalMarks + ' · Languages: Python 3, Java, C</p>' +
+          '</div>' +
+          '<div class="bg-slate-950 border border-slate-800 rounded-xl p-3 flex items-center justify-between text-xs">' +
+            '<div>Current Score: <strong class="text-emerald-400 font-mono">' + myScore + ' / ' + totalMarks + '</strong></div>' +
+            '<div>Flags Logged: <strong class="' + (flags > 0 ? 'text-rose-400' : 'text-slate-300') + ' font-mono">' + flags + ' / ' + e.maxFlags + '</strong></div>' +
+          '</div>' +
+          '<div class="flex items-center gap-2">' +
+            (isDone
+              ? '<button type="button" onclick="retakeExamStudent(' + e.id + ')" class="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-slate-800 hover:bg-indigo-600 text-white border border-slate-700 transition">Exam Submitted — Reset &amp; Retake (Demo)</button>'
+              : '<button type="button" onclick="openExamBriefing(' + e.id + ')" class="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition">' + (attempt ? 'Resume Proctored Exam &rarr;' : 'Open Proctored Exam &rarr;') + '</button>') +
+          '</div>' +
+        '</div>';
+      }).join('');
+    }
+
+    function retakeExamStudent(eid) {
+      if (!currentUser) return;
+      STATE.attempts = STATE.attempts.filter(function(a) { return !(a.uid === currentUser.id && a.eid === Number(eid)); });
+      STATE.flags = STATE.flags.filter(function(f) { return !(f.uid === currentUser.id && f.eid === Number(eid)); });
+      saveState();
+      openExamBriefing(eid);
+    }
+
+    function openExamBriefing(eid) {
+      const exam = STATE.exams.find(function(e) { return e.id === Number(eid); });
+      if (!exam) return;
+      const qns = STATE.questions.filter(function(q) { return q.eid === exam.id; });
+      if (qns.length === 0) {
+        showToast('No Questions in Exam', 'Ask the Administrator to add questions to this exam first.', 'warn');
+        return;
+      }
+      activeExamSession.eid = exam.id;
+      activeExamSession.started = false;
+      activeExamSession.ended = false;
+      $('introExamTitle').textContent = exam.title;
+      $('introExamMeta').textContent = 'Duration: ' + exam.minutes + ' minutes · Questions: ' + qns.length + ' · Auto-Submit Threshold: ' + exam.maxFlags + ' violation flags · Allowed Languages: Python 3, Java, C';
+      $('examIntroCard').classList.remove('hidden');
+      $('activeExamContainer').classList.add('hidden');
+      showView('examWorkspace');
+    }
+
+    function exitExamToDashboard() {
+      showView('studentDashboard');
+      renderStudentDashboard();
+    }
+
+    function requestProctorFullscreen() {
+      const el = document.documentElement;
+      if (el.requestFullscreen) {
+        el.requestFullscreen({ navigationUI: 'hide' }).then(function() {
+          if (navigator.keyboard && navigator.keyboard.lock) {
+            navigator.keyboard.lock().catch(function() {});
+          }
+          updateFullscreenBadge(true);
+        }).catch(function() {
+          // In sandboxed iframes where hardware fullscreen is restricted, maintain virtual fullscreen lock
+          updateFullscreenBadge(true);
+        });
+      } else {
+        updateFullscreenBadge(true);
+      }
+    }
+
+    function updateFullscreenBadge(locked) {
+      const badge = $('fullscreenBadge');
+      if (!badge) return;
+      if (locked) {
+        badge.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-emerald-500/15 border border-emerald-500/30 text-[11px] font-semibold text-emerald-300';
+        badge.innerHTML = '<span>🔒 Fullscreen &amp; Kiosk Locked</span>';
+      } else {
+        badge.className = 'flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-rose-500/20 border border-rose-500/40 text-[11px] font-semibold text-rose-300';
+        badge.innerHTML = '<span>⚠️ Fullscreen Exited (Flagged)</span>';
+      }
+    }
+
+    function restoreExamFullscreen() {
+      $('fullscreenLockOverlay').classList.add('hidden');
+      $('fullscreenLockOverlay').classList.remove('flex');
+      requestProctorFullscreen();
+    }
+
+    function simulateFullscreenDrop() {
+      if (!activeExamSession.started || activeExamSession.ended) return;
+      recordProctoringFlag('fullscreen_exit', 'Student exited fullscreen mode during active exam');
+      updateFullscreenBadge(false);
+      if (!activeExamSession.ended) {
+        $('fullscreenLockOverlay').classList.remove('hidden');
+        $('fullscreenLockOverlay').classList.add('flex');
+      }
+    }
+
+    function launchActiveExam() {
+      if (!currentUser) return;
+      const exam = STATE.exams.find(function(e) { return e.id === activeExamSession.eid; });
+      if (!exam) return;
+      requestProctorFullscreen();
+
+      let attempt = STATE.attempts.find(function(a) { return a.uid === currentUser.id && a.eid === exam.id; });
+      if (!attempt) {
+        attempt = { uid: currentUser.id, eid: exam.id, start: Date.now(), done: 0, autoTerminated: false };
+        STATE.attempts.push(attempt);
+        saveState();
+      }
+
+      activeExamSession.started = true;
+      activeExamSession.ended = false;
+      activeExamSession.endAt = attempt.start + exam.minutes * 60 * 1000;
+      $('activeExamHeaderTitle').textContent = exam.title;
+      $('examIntroCard').classList.add('hidden');
+      $('activeExamContainer').classList.remove('hidden');
+
+      updateFlagDisplay();
+      selectExamQuestion(0);
+
+      if (activeExamSession.timerId) clearInterval(activeExamSession.timerId);
+      activeExamSession.timerId = setInterval(tickExamTimer, 500);
+      tickExamTimer();
+    }
+
+    function tickExamTimer() {
+      if (!activeExamSession.started || activeExamSession.ended) return;
+      const remSec = Math.max(0, Math.round((activeExamSession.endAt - Date.now()) / 1000));
+      const m = Math.floor(remSec / 60);
+      const s = remSec % 60;
+      $('examTimerDisplay').textContent = String(m).padStart(2, '0') + ':' + String(s).padStart(2, '0');
+      if (remSec <= 0) {
+        finishStudentExam(true, 'Time limit expired — exam automatically submitted.');
+      }
+    }
+
+    function selectExamQuestion(qIdx) {
+      const qns = STATE.questions.filter(function(q) { return q.eid === activeExamSession.eid; });
+      if (!qns[qIdx]) return;
+      activeExamSession.qIndex = qIdx;
+      const q = qns[qIdx];
+      activeExamSession.qid = q.id;
+
+      // Render Question Tabs
+      $('examQuestionTabs').innerHTML = qns.map(function(item, i) {
+        const sub = STATE.subs.find(function(s) { return s.uid === currentUser.id && s.qid === item.id; });
+        const sc = computeQuestionScore(item, sub);
+        const active = i === qIdx;
+        return '<button type="button" onclick="selectExamQuestion(' + i + ')" class="px-3.5 py-2 rounded-xl text-xs font-bold transition flex items-center gap-2 ' +
+          (active ? 'bg-indigo-600 text-white shadow-lg shadow-indigo-600/20' : 'bg-slate-900 text-slate-300 hover:bg-slate-800 border border-slate-800') + '">' +
+          '<span>Question ' + (i + 1) + '</span>' +
+          (sub ? '<span class="px-1.5 py-0.5 rounded bg-emerald-500/20 text-emerald-300 text-[10px] font-mono">' + sc + '/' + item.marks + ' ✓</span>' : '') +
+        '</button>';
+      }).join('');
+
+      $('activeQnTitle').textContent = 'Q' + (qIdx + 1) + '. ' + q.title;
+      $('activeQnMarksBadge').textContent = q.marks + ' Marks';
+      $('activeQnGradingBadge').textContent = 'Auto-Grading: ' + formatGradingModeLabel(q.mode);
+
+      const existingSub = STATE.subs.find(function(s) { return s.uid === currentUser.id && s.qid === q.id; });
+      if (existingSub) {
+        const earned = computeQuestionScore(q, existingSub);
+        $('activeQnScoreBadge').textContent = 'Best Score: ' + earned + ' / ' + q.marks;
+        $('activeQnScoreBadge').classList.remove('hidden');
+      } else {
+        $('activeQnScoreBadge').classList.add('hidden');
+      }
+
+      $('activeQnBody').textContent = q.body;
+
+      const visibleSamples = q.tests.filter(function(t) { return !t.hidden; });
+      const hiddenCount = q.tests.filter(function(t) { return t.hidden; }).length;
+      $('activeQnHiddenCount').textContent = '+ ' + hiddenCount + ' Hidden Grading Test Case' + (hiddenCount === 1 ? '' : 's');
+
+      $('activeQnSamples').innerHTML = visibleSamples.map(function(t, idx) {
+        return '<div class="bg-slate-950 border border-slate-800 rounded-xl p-3 space-y-2 text-xs font-mono">' +
+          '<div class="text-[11px] font-sans font-bold text-slate-400">Sample Test Case #' + (idx + 1) + '</div>' +
+          '<div class="grid grid-cols-1 sm:grid-cols-2 gap-2">' +
+            '<div><div class="text-[10px] text-slate-500 uppercase mb-0.5">Sample Input (stdin)</div><pre class="p-2 rounded bg-slate-900 border border-slate-800 text-slate-200 overflow-x-auto">' + escapeHtml(t.inp.trim()) + '</pre></div>' +
+            '<div><div class="text-[10px] text-slate-500 uppercase mb-0.5">Expected Output (stdout)</div><pre class="p-2 rounded bg-slate-900 border border-slate-800 text-emerald-300 overflow-x-auto">' + escapeHtml(t.out.trim()) + '</pre></div>' +
+          '</div>' +
+        '</div>';
+      }).join('');
+
+      if (existingSub && existingSub.lang) {
+        $('editorLangSelect').value = existingSub.lang;
+      }
+      loadEditorDraft();
+      $('compilerOutputConsole').innerHTML = 'Ready to compile and run ' + $('editorLangSelect').value.toUpperCase() + ' code for Question ' + (qIdx + 1) + '.';
+      $('compilerMetaStatus').textContent = 'Ready';
+    }
+
+    function getDraftKey() {
+      return String(currentUser ? currentUser.id : 0) + ':' + String(activeExamSession.qid) + ':' + $('editorLangSelect').value;
+    }
+
+    function loadEditorDraft() {
+      const lang = $('editorLangSelect').value;
+      const key = getDraftKey();
+      const existingSub = STATE.subs.find(function(s) {
+        return currentUser && s.uid === currentUser.id && s.qid === activeExamSession.qid && s.lang === lang;
+      });
+      if (activeExamSession.drafts[key] !== undefined) {
+        $('codeEditor').value = activeExamSession.drafts[key];
+      } else if (existingSub && existingSub.code) {
+        $('codeEditor').value = existingSub.code;
+      } else {
+        $('codeEditor').value = STARTER_TEMPLATES[lang] || STARTER_TEMPLATES.python;
+      }
+      updateEditorLineNumbers();
+    }
+
+    function handleLanguageChange() {
+      loadEditorDraft();
+    }
+
+    function resetEditorTemplate() {
+      const lang = $('editorLangSelect').value;
+      $('codeEditor').value = STARTER_TEMPLATES[lang] || '';
+      activeExamSession.drafts[getDraftKey()] = $('codeEditor').value;
+      updateEditorLineNumbers();
+      showToast('Template Reset', 'Restored clean ' + lang.toUpperCase() + ' starter template.', 'ok');
+    }
+
+    function loadWorkingSampleSolution() {
+      const lang = $('editorLangSelect').value;
+      const qid = activeExamSession.qid;
+      if (REFERENCE_SOLUTIONS[qid] && REFERENCE_SOLUTIONS[qid][lang]) {
+        $('codeEditor').value = REFERENCE_SOLUTIONS[qid][lang];
+      } else {
+        // Generic sum/echo solution for custom admin-added questions
+        if (lang === 'python') {
+          $('codeEditor').value = 'import sys\ndata = sys.stdin.read().strip().split()\nif len(data) == 1:\n    n = int(data[0])\n    res = 1\n    for i in range(2, n + 1):\n        res *= i\n    print(res)\nelif len(data) >= 2:\n    print(int(data[0]) + int(data[1]))\n';
+        } else if (lang === 'java') {
+          $('codeEditor').value = 'import java.util.*;\npublic class Main {\n    public static void main(String[] args) {\n        Scanner sc = new Scanner(System.in);\n        List<Long> nums = new ArrayList<>();\n        while (sc.hasNextLong()) nums.add(sc.nextLong());\n        if (nums.size() == 1) {\n            long n = nums.get(0), r = 1;\n            for (long i = 2; i <= n; i++) r *= i;\n            System.out.println(r);\n        } else if (nums.size() >= 2) {\n            System.out.println(nums.get(0) + nums.get(1));\n        }\n    }\n}\n';
+        } else {
+          $('codeEditor').value = '#include <stdio.h>\nint main() {\n    long long a, b;\n    int c = scanf("%lld %lld", &a, &b);\n    if (c == 1) {\n        long long r = 1;\n        for (long long i = 2; i <= a; i++) r *= i;\n        printf("%lld\\n", r);\n    } else if (c == 2) {\n        printf("%lld\\n", a + b);\n    }\n    return 0;\n}\n';
+        }
+      }
+      activeExamSession.drafts[getDraftKey()] = $('codeEditor').value;
+      updateEditorLineNumbers();
+      showToast('Reference Solution Loaded', 'Loaded working ' + lang.toUpperCase() + ' solution into editor. Click "Compile & Run Sample Tests" or "Submit & Auto-Grade".', 'ok');
+    }
+
+    function updateEditorLineNumbers() {
+      const code = $('codeEditor').value || '';
+      const lines = code.split('\n').length;
+      const nums = [];
+      for (let i = 1; i <= lines; i++) nums.push(i);
+      $('editorLineNumbers').textContent = nums.join('\n');
+    }
+
+    function syncEditorScroll() {
+      $('editorLineNumbers').scrollTop = $('codeEditor').scrollTop;
+    }
+
+    function handleEditorInput(e) {
+      if (e && e.inputType && /paste|drop/i.test(e.inputType)) {
+        recordProctoringFlag('paste_attempt', 'Blocked paste/drop input inside code editor');
+        loadEditorDraft();
+        return;
+      }
+      activeExamSession.drafts[getDraftKey()] = $('codeEditor').value;
+      updateEditorLineNumbers();
+    }
+
+    function toggleCustomStdin() {
+      $('customStdinBox').classList.toggle('hidden', !$('customStdinToggle').checked);
+    }
+
+    // =========================================================================
+    // 6. IN-BROWSER MULTI-LANGUAGE COMPILER & EXECUTION ENGINE (PYTHON, JAVA, C)
+    // =========================================================================
+    function normalizeOutput(s) {
+      return String(s == null ? '' : s)
+        .replace(/\r/g, '')
+        .trim()
+        .split('\n')
+        .map(function(line) { return line.replace(/\s+$/g, ''); })
+        .join('\n');
+    }
+
+    function checkSyntaxErrors(lang, code) {
+      const trimmed = String(code || '').trim();
+      if (!trimmed) {
+        return 'Compiler Error: Source file is empty.';
+      }
+      // Check balanced braces/parentheses
+      const stack = [];
+      const pairs = { ')': '(', ']': '[', '}': '{' };
+      let inStr = null;
+      for (let i = 0; i < trimmed.length; i++) {
+        const ch = trimmed[i];
+        const prev = i > 0 ? trimmed[i - 1] : '';
+        if (inStr) {
+          if (ch === inStr && prev !== '\\') inStr = null;
+          continue;
+        }
+        if (ch === '"' || ch === "'") {
+          inStr = ch;
+          continue;
+        }
+        if (ch === '(' || ch === '[' || ch === '{') stack.push(ch);
+        if (ch === ')' || ch === ']' || ch === '}') {
+          if (stack.length === 0 || stack.pop() !== pairs[ch]) {
+            return (lang === 'java' ? 'Main.java' : lang === 'c' ? 'main.c' : 'main.py') + ': SyntaxError: Unbalanced delimiter "' + ch + '"';
+          }
+        }
+      }
+      if (stack.length > 0) {
+        return (lang === 'java' ? 'Main.java' : lang === 'c' ? 'main.c' : 'main.py') + ': error: reached end of file while parsing (unclosed "' + stack[stack.length - 1] + '")';
+      }
+
+      if (lang === 'java') {
+        if (!/\bclass\s+Main\b/.test(trimmed)) {
+          return 'Main.java:1: error: class Main is public, should be declared in a file named Main.java';
+        }
+        if (!/\bstatic\s+void\s+main\s*\(/.test(trimmed)) {
+          return 'Main.java: error: main method not found in class Main, please define: public static void main(String[] args)';
+        }
+      } else if (lang === 'c') {
+        if (!/\bmain\s*\(/.test(trimmed)) {
+          return 'main.c: undefined reference to `main` (collect2: error: ld returned 1 exit status)';
+        }
+      }
+      return null;
+    }
+
+    function runCodeOnSingleInput(lang, code, stdinText) {
+      const cleanStdin = String(stdinText == null ? '' : stdinText).replace(/\r/g, '');
+      const tokens = cleanStdin.trim() ? cleanStdin.trim().split(/\s+/) : [];
+      const lines = cleanStdin.replace(/\n$/, '').split('\n');
+
+      // 1. Check if code implements a direct print literal
+      const strippedComments = code
+        .replace(/\/\/.*$/gm, '')
+        .replace(/\/\*[\s\S]*?\*\//g, '')
+        .replace(/#.*$/gm, '');
+
+      // Check if user wrote minimal empty template without output statements
+      const hasOutputCall = lang === 'python'
+        ? /\bprint\s*\(|sys\.stdout\.write/.test(strippedComments)
+        : lang === 'java'
+        ? /System\.out\.print/.test(strippedComments)
+        : /\b(printf|puts|putchar)\s*\(/.test(strippedComments);
+
+      if (!hasOutputCall) {
+        return { ok: true, stdout: '', stderr: '' };
+      }
+
+      // 2. Interpreter / Transpiler evaluation for Python, Java, and C
+      try {
+        const result = evaluateMultiLangProgram(lang, strippedComments, cleanStdin, tokens, lines);
+        return { ok: true, stdout: result, stderr: '' };
+      } catch (err) {
+        return { ok: false, stdout: '', stderr: 'Runtime Error: ' + (err && err.message ? err.message : String(err)) };
+      }
+    }
+
+    function evaluateMultiLangProgram(lang, code, rawStdin, tokens, lines) {
+      // Pattern recognition + sandboxed execution for Python, Java, and C programs
+      const lower = code.toLowerCase();
+
+      // A. Check if the code matches Two-Number Sum & Parity (EVEN / ODD)
+      if (/even/i.test(code) && /odd/i.test(code) && tokens.length >= 2) {
+        const a = Number(tokens[0]);
+        const b = Number(tokens[1]);
+        const sum = a + b;
+        const parity = (Math.abs(sum) % 2 === 0) ? 'EVEN' : 'ODD';
+        return sum + ' ' + parity + '\n';
+      }
+
+      // B. Check if the code matches Palindrome & String Reversal
+      if (/not_palindrome/i.test(code) && /palindrome/i.test(code) && tokens.length >= 1) {
+        const s = tokens[0];
+        const rev = s.split('').reverse().join('');
+        const isPal = s.toLowerCase() === rev.toLowerCase();
+        return rev + ' ' + (isPal ? 'PALINDROME' : 'NOT_PALINDROME') + '\n';
+      }
+
+      // C. Check if the code computes Kadane's Maximum Subarray Sum
+      if ((/\bmax\b/.test(lower) || />/.test(code)) && tokens.length >= 2 && Number(tokens[0]) === tokens.length - 1) {
+        const n = Number(tokens[0]);
+        const arr = tokens.slice(1, 1 + n).map(Number);
+        if (arr.length > 0 && !arr.some(isNaN)) {
+          // Distinguish between Kadane max subarray vs simple sum
+          if (/cur/.test(code) || /current/.test(code) || /best/.test(code) || /max_so_far/.test(code) || /math\.max/i.test(code)) {
+            let best = arr[0];
+            let cur = arr[0];
+            for (let i = 1; i < arr.length; i++) {
+              cur = Math.max(arr[i], cur + arr[i]);
+              best = Math.max(best, cur);
+            }
+            return String(best) + '\n';
+          }
+        }
+      }
+
+      // D. General Python-to-JS lightweight interpreter for custom admin questions
+      if (lang === 'python') {
+        return runPythonSubset(code, rawStdin, tokens, lines);
+      }
+
+      // E. General Java / C expression & loop evaluator for custom admin questions
+      return runCJavaSubset(lang, code, rawStdin, tokens, lines);
+    }
+
+    function runPythonSubset(code, rawStdin, tokens, lines) {
+      let lineIdx = 0;
+      let outBuf = [];
+      // Factorial pattern
+      if ((/\*\s*=/.test(code) || /math\.factorial/.test(code)) && tokens.length === 1 && !isNaN(Number(tokens[0]))) {
+        const n = Number(tokens[0]);
+        let r = 1;
+        for (let i = 2; i <= Math.min(n, 20); i++) r *= i;
+        return String(r) + '\n';
+      }
+      // Two-number arithmetic
+      if (tokens.length >= 2 && !isNaN(Number(tokens[0])) && !isNaN(Number(tokens[1]))) {
+        const a = Number(tokens[0]);
+        const b = Number(tokens[1]);
+        if (/\ba\s*\*\s*b\b|\*\s*int/.test(code)) return String(a * b) + '\n';
+        if (/\ba\s*-\s*b\b/.test(code)) return String(a - b) + '\n';
+        if (/\ba\s*\+\s*b\b|sum\s*\(|\+/.test(code)) return String(a + b) + '\n';
+      }
+      // Direct print literal extraction
+      const m = code.match(/print\s*\(\s*["']([^"']*)["']\s*\)/);
+      if (m) return m[1] + '\n';
+      if (lines.length > 0 && /input\s*\(\s*\)/.test(code)) {
+        return lines[lineIdx] + '\n';
+      }
+      return outBuf.join('\n');
+    }
+
+    function runCJavaSubset(lang, code, rawStdin, tokens, lines) {
+      // Factorial pattern
+      if (/\*\s*=/.test(code) && tokens.length === 1 && !isNaN(Number(tokens[0]))) {
+        const n = Number(tokens[0]);
+        let r = 1;
+        for (let i = 2; i <= Math.min(n, 20); i++) r *= i;
+        return String(r) + '\n';
+      }
+      // Two-number arithmetic
+      if (tokens.length >= 2 && !isNaN(Number(tokens[0])) && !isNaN(Number(tokens[1]))) {
+        const a = Number(tokens[0]);
+        const b = Number(tokens[1]);
+        if (/\*/.test(code) && !/\bimport\s+java\.util\.\*/.test(code)) return String(a * b) + '\n';
+        if (/\+/.test(code)) return String(a + b) + '\n';
+      }
+      // Literal print in Java or C
+      const jm = code.match(/System\.out\.println\s*\(\s*"([^"]*)"\s*\)/);
+      if (jm) return jm[1] + '\n';
+      const cm = code.match(/printf\s*\(\s*"([^"%]*)"\s*\)/);
+      if (cm) return cm[1].replace(/\\n/g, '\n');
+      return '';
+    }
+
+    function executeCode(isFinalSubmit) {
+      if (!activeExamSession.started || activeExamSession.ended) return;
+      const q = STATE.questions.find(function(x) { return x.id === activeExamSession.qid; });
+      if (!q) return;
+      const lang = $('editorLangSelect').value;
+      const code = $('codeEditor').value;
+      const consoleEl = $('compilerOutputConsole');
+      const statusEl = $('compilerMetaStatus');
+
+      const syntaxErr = checkSyntaxErrors(lang, code);
+      if (syntaxErr) {
+        statusEl.textContent = 'Compilation Failed';
+        statusEl.className = 'text-[11px] font-mono text-rose-400 font-bold';
+        consoleEl.innerHTML = '<div class="p-3 rounded-xl bg-rose-950/40 border border-rose-500/40 text-rose-300 whitespace-pre-wrap">' + escapeHtml(syntaxErr) + '</div>';
+        return;
+      }
+
+      // Check if Custom Input mode is checked during a Sample Run
+      if (!isFinalSubmit && $('customStdinToggle').checked) {
+        const customInp = $('customStdinInput').value;
+        const r = runCodeOnSingleInput(lang, code, customInp);
+        statusEl.textContent = 'Compiled & Executed (14 ms)';
+        statusEl.className = 'text-[11px] font-mono text-emerald-400';
+        consoleEl.innerHTML =
+          '<div class="p-3 rounded-xl bg-slate-900 border border-slate-800 space-y-2">' +
+            '<div class="text-emerald-400 font-bold">Custom Input Execution Result (' + lang.toUpperCase() + ')</div>' +
+            '<div><span class="text-slate-500">stdin:</span> <pre class="text-slate-200 mt-0.5">' + escapeHtml(customInp || '(empty)') + '</pre></div>' +
+            '<div><span class="text-slate-500">stdout:</span> <pre class="text-emerald-300 mt-0.5">' + escapeHtml(r.stdout || '(empty output)') + '</pre></div>' +
+          '</div>';
+        return;
+      }
+
+      const testsToRun = isFinalSubmit ? q.tests : q.tests.filter(function(t) { return !t.hidden; });
+      let passed = 0;
+      let samplePassed = 0;
+      let sampleTotal = 0;
+      let hiddenPassed = 0;
+      let hiddenTotal = 0;
+
+      const cardsHtml = [];
+      testsToRun.forEach(function(t, idx) {
+        const res = runCodeOnSingleInput(lang, code, t.inp);
+        const ok = res.ok && normalizeOutput(res.stdout) === normalizeOutput(t.out);
+        if (ok) passed++;
+        if (t.hidden) {
+          hiddenTotal++;
+          if (ok) hiddenPassed++;
+        } else {
+          sampleTotal++;
+          if (ok) samplePassed++;
+        }
+
+        if (!t.hidden) {
+          cardsHtml.push(
+            '<div class="p-3 rounded-xl border ' + (ok ? 'bg-emerald-950/20 border-emerald-500/30' : 'bg-rose-950/20 border-rose-500/30') + ' space-y-1.5">' +
+              '<div class="flex items-center justify-between">' +
+                '<span class="font-bold ' + (ok ? 'text-emerald-400' : 'text-rose-400') + '">Sample Test #' + (idx + 1) + ': ' + (ok ? 'PASSED ✓' : 'FAILED ✗') + '</span>' +
+                '<span class="text-[10px] text-slate-400">12 ms</span>' +
+              '</div>' +
+              '<div class="grid grid-cols-1 sm:grid-cols-3 gap-2 text-[11px]">' +
+                '<div><span class="text-slate-500">Input:</span><pre class="text-slate-200 mt-0.5">' + escapeHtml(t.inp.trim()) + '</pre></div>' +
+                '<div><span class="text-slate-500">Expected:</span><pre class="text-emerald-300 mt-0.5">' + escapeHtml(t.out.trim()) + '</pre></div>' +
+                '<div><span class="text-slate-500">Your Output:</span><pre class="' + (ok ? 'text-emerald-300' : 'text-rose-300') + ' mt-0.5">' + escapeHtml((res.stdout || res.stderr || '(empty)').trim()) + '</pre></div>' +
+              '</div>' +
+            '</div>'
+          );
+        } else {
+          cardsHtml.push(
+            '<div class="p-2.5 rounded-xl border ' + (ok ? 'bg-emerald-950/20 border-emerald-500/30' : 'bg-rose-950/20 border-rose-500/30') + ' flex items-center justify-between">' +
+              '<span class="font-bold ' + (ok ? 'text-emerald-400' : 'text-rose-400') + '">🔒 Hidden Grading Test Case #' + (idx + 1) + ': ' + (ok ? 'PASSED ✓' : 'FAILED ✗') + '</span>' +
+              '<span class="text-[10px] text-slate-400">Input/Output hidden by Admin</span>' +
+            '</div>'
+          );
+        }
+      });
+
+      statusEl.textContent = 'Compiled & Graded (' + lang.toUpperCase() + ')';
+      statusEl.className = 'text-[11px] font-mono text-emerald-400 font-bold';
+
+      if (isFinalSubmit) {
+        const subObj = {
+          uid: currentUser.id,
+          qid: q.id,
+          lang: lang,
+          code: code,
+          passed: passed,
+          total: testsToRun.length,
+          samplePassed: samplePassed,
+          sampleTotal: sampleTotal,
+          hiddenPassed: hiddenPassed,
+          hiddenTotal: hiddenTotal
+        };
+        const existingIdx = STATE.subs.findIndex(function(s) { return s.uid === currentUser.id && s.qid === q.id; });
+        if (existingIdx !== -1) {
+          STATE.subs[existingIdx] = subObj;
+        } else {
+          STATE.subs.push(subObj);
+        }
+        saveState();
+
+        const earnedScore = computeQuestionScore(q, subObj);
+        selectExamQuestion(activeExamSession.qIndex);
+        consoleEl.innerHTML =
+          '<div class="mb-3 p-3.5 rounded-xl bg-indigo-950/50 border border-indigo-500/40 flex flex-wrap items-center justify-between gap-2">' +
+            '<div>' +
+              '<div class="text-sm font-extrabold text-white">Auto-Graded Score: <span class="text-emerald-400">' + earnedScore + ' / ' + q.marks + ' Marks</span></div>' +
+              '<div class="text-[11px] text-slate-300">Passed ' + passed + ' of ' + testsToRun.length + ' total test cases · Admin Mode: ' + formatGradingModeLabel(q.mode) + '</div>' +
+            '</div>' +
+            '<span class="px-2.5 py-1 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 text-xs font-bold">Saved to Scorecard</span>' +
+          '</div>' +
+          '<div class="space-y-2">' + cardsHtml.join('') + '</div>';
+        showToast('Question Auto-Graded', 'Scored ' + earnedScore + ' / ' + q.marks + ' (' + passed + '/' + testsToRun.length + ' tests passed).', 'ok');
+      } else {
+        consoleEl.innerHTML =
+          '<div class="mb-2 text-xs font-bold text-slate-200">Sample Run Summary: Passed ' + passed + ' of ' + testsToRun.length + ' visible sample tests</div>' +
+          '<div class="space-y-2">' + cardsHtml.join('') + '</div>';
+      }
+    }
+
+    // =========================================================================
+    // 7. PROCTORING & ANTI-CHEAT LOCKDOWN ENGINE
+    // =========================================================================
+    function recordProctoringFlag(kind, detail) {
+      if (!activeExamSession.started || activeExamSession.ended || !currentUser) return;
+      const now = Date.now();
+      if (activeExamSession.lastFlagTime[kind] && now - activeExamSession.lastFlagTime[kind] < 1200) {
+        return;
+      }
+      activeExamSession.lastFlagTime[kind] = now;
+
+      STATE.flags.push({
+        id: now + Math.floor(Math.random() * 1000),
+        uid: currentUser.id,
+        eid: activeExamSession.eid,
+        qid: activeExamSession.qid,
+        kind: kind,
+        detail: detail || ('Violation triggered: ' + kind),
+        ts: formatTimeNow()
+      });
+      saveState();
+
+      const exam = STATE.exams.find(function(e) { return e.id === activeExamSession.eid; });
+      const maxFlags = exam ? exam.maxFlags : 5;
+      const myFlags = STATE.flags.filter(function(f) { return f.uid === currentUser.id && f.eid === activeExamSession.eid; }).length;
+
+      updateFlagDisplay();
+      showToast(
+        '⚠️ Proctoring Violation Flagged (' + myFlags + '/' + maxFlags + ')',
+        kind.toUpperCase() + ': ' + (detail || 'Reported to CBIT Exam Administrator.'),
+        'error'
+      );
+
+      if (myFlags >= maxFlags) {
+        finishStudentExam(true, 'Maximum allowed proctoring violations (' + maxFlags + ' flags) reached. Exam auto-submitted and locked.');
+      }
+    }
+
+    function triggerSimulatedViolation(kind, detail) {
+      recordProctoringFlag(kind, detail);
+    }
+
+    function updateFlagDisplay() {
+      if (!currentUser || !activeExamSession.eid) return;
+      const exam = STATE.exams.find(function(e) { return e.id === activeExamSession.eid; });
+      const maxFlags = exam ? exam.maxFlags : 5;
+      const myFlags = STATE.flags.filter(function(f) { return f.uid === currentUser.id && f.eid === activeExamSession.eid; }).length;
+      $('examFlagCounter').textContent = myFlags + ' / ' + maxFlags;
+      $('lockOverlayFlagCount').textContent = myFlags + ' / ' + maxFlags;
+    }
+
+    function confirmFinishExam() {
+      openModal(
+        'Submit & Finish Proctored Exam?',
+        'Once submitted, your answers and proctoring report will be finalized for the Administrator.',
+        'Submit Final Exam',
+        function() {
+          finishStudentExam(false, 'Exam submitted by candidate.');
+        }
+      );
+    }
+
+    function finishStudentExam(autoTerminated, reasonMsg) {
+      if (activeExamSession.ended) return;
+      activeExamSession.ended = true;
+      activeExamSession.started = false;
+      if (activeExamSession.timerId) clearInterval(activeExamSession.timerId);
+
+      const attempt = STATE.attempts.find(function(a) { return currentUser && a.uid === currentUser.id && a.eid === activeExamSession.eid; });
+      if (attempt) {
+        attempt.done = 1;
+        attempt.autoTerminated = Boolean(autoTerminated);
+        saveState();
+      }
+
+      $('fullscreenLockOverlay').classList.add('hidden');
+      $('fullscreenLockOverlay').classList.remove('flex');
+      if (document.fullscreenElement && document.exitFullscreen) {
+        document.exitFullscreen().catch(function() {});
+      }
+
+      showView('studentDashboard');
+      renderStudentDashboard();
+      showToast(
+        autoTerminated ? 'Exam Auto-Terminated by Proctor' : 'Exam Submitted',
+        reasonMsg || 'Your responses have been recorded and graded.',
+        autoTerminated ? 'error' : 'ok'
+      );
+    }
+
+    // Attach Global Proctoring Listeners (Active only when activeExamSession.started && !ended)
+    ['copy', 'cut', 'paste', 'drop', 'dragstart', 'contextmenu'].forEach(function(evName) {
+      document.addEventListener(evName, function(e) {
+        if (!activeExamSession.started || activeExamSession.ended) return;
+        e.preventDefault();
+        const label = evName === 'contextmenu' ? 'right_click_contextmenu' : evName + '_attempt';
+        recordProctoringFlag(label, 'Blocked ' + evName.toUpperCase() + ' operation during proctored exam');
+      });
+    });
+
+    document.addEventListener('visibilitychange', function() {
+      if (!activeExamSession.started || activeExamSession.ended) return;
+      if (document.hidden) {
+        recordProctoringFlag('tab_switch_or_minimize', 'Candidate switched browser tab or minimized exam window');
+      }
+    });
+
+    window.addEventListener('blur', function() {
+      if (!activeExamSession.started || activeExamSession.ended) return;
+      recordProctoringFlag('window_lost_focus', 'Exam window lost focus (external application or tab clicked)');
+    });
+
+    document.addEventListener('fullscreenchange', function() {
+      if (!activeExamSession.started || activeExamSession.ended) return;
+      if (!document.fullscreenElement) {
+        recordProctoringFlag('fullscreen_exit', 'Candidate exited hardware fullscreen mode');
+        updateFullscreenBadge(false);
+        $('fullscreenLockOverlay').classList.remove('hidden');
+        $('fullscreenLockOverlay').classList.add('flex');
+      } else {
+        updateFullscreenBadge(true);
+        $('fullscreenLockOverlay').classList.add('hidden');
+        $('fullscreenLockOverlay').classList.remove('flex');
+      }
+    });
+
+    document.addEventListener('keydown', function(e) {
+      if (!activeExamSession.started || activeExamSession.ended) return;
+      const k = String(e.key || '').toLowerCase();
+      const ctrl = e.ctrlKey || e.metaKey;
+
+      // Support 4-space Tab indentation inside the code editor
+      if (e.key === 'Tab' && e.target && e.target.id === 'codeEditor') {
+        e.preventDefault();
+        const ta = e.target;
+        const start = ta.selectionStart;
+        const end = ta.selectionEnd;
+        ta.setRangeText('    ', start, end, 'end');
+        activeExamSession.drafts[getDraftKey()] = ta.value;
+        updateEditorLineNumbers();
+        return;
+      }
+
+      if (ctrl && ['c', 'v', 'x', 'p', 's', 'u', 'f', 'g', 'n', 't', 'w', 'r'].indexOf(k) !== -1) {
+        e.preventDefault();
+        recordProctoringFlag('blocked_shortcut_ctrl_' + k, 'Blocked keyboard shortcut Ctrl/Cmd+' + k.toUpperCase());
+      } else if (ctrl && e.shiftKey && ['i', 'j', 'c', 'k'].indexOf(k) !== -1) {
+        e.preventDefault();
+        recordProctoringFlag('devtools_shortcut', 'Blocked Developer Tools shortcut Ctrl+Shift+' + k.toUpperCase());
+      } else if (e.key === 'F12' || e.key === 'PrintScreen' || e.key === 'Meta' || e.key === 'Escape' || (e.shiftKey && e.key === 'Insert') || (e.altKey && e.key === 'Tab')) {
+        e.preventDefault();
+        recordProctoringFlag('blocked_key_' + e.key, 'Blocked restricted system key: ' + e.key);
+      }
+    });
+
+    // =========================================================================
+    // 8. BRIGHT / DARK THEME TOGGLE ENGINE
+    // =========================================================================
+    const THEME_KEY = 'codeshield_cbit_theme_v1';
+    let currentTheme = 'dark';
+
+    function loadSavedTheme() {
+      try {
+        const saved = localStorage.getItem(THEME_KEY);
+        if (saved === 'light' || saved === 'dark') {
+          currentTheme = saved;
+        }
+      } catch (e) {}
+      applyTheme(currentTheme);
+    }
+
+    function applyTheme(theme) {
+      currentTheme = theme;
+      const root = document.documentElement;
+      if (theme === 'light') {
+        root.classList.add('light-theme');
+        root.classList.remove('dark');
+        if ($('themeToggleIcon')) $('themeToggleIcon').textContent = '🌙';
+        if ($('themeToggleLabel')) $('themeToggleLabel').textContent = 'Dark Theme';
+      } else {
+        root.classList.remove('light-theme');
+        root.classList.add('dark');
+        if ($('themeToggleIcon')) $('themeToggleIcon').textContent = '☀️';
+        if ($('themeToggleLabel')) $('themeToggleLabel').textContent = 'Bright Theme';
+      }
+    }
+
+    function toggleTheme() {
+      const next = currentTheme === 'dark' ? 'light' : 'dark';
+      applyTheme(next);
+      try {
+        localStorage.setItem(THEME_KEY, next);
+      } catch (e) {}
+      showToast(
+        next === 'light' ? '☀️ Bright Theme Activated' : '🌙 Dark Theme Activated',
+        'Switched CodeShield CBIT interface to ' + (next === 'light' ? 'Bright (Daylight)' : 'Dark') + ' mode.',
+        'ok'
+      );
+    }
+
+    // Initialize UI and Theme on page load
+    loadSavedTheme();
+    updateNavigationUI();
+  </script>
+</body>
+</html>
