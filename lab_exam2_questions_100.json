@@ -1,0 +1,3202 @@
+[
+  {
+    "id": 1011,
+    "eid": 1,
+    "setNo": 1,
+    "part": "A",
+    "title": "Set 1 \u2014 Part A: Develop a Java program to manage a student list using ArrayList, ...",
+    "body": "a) Develop a Java program to manage a student list using ArrayList, allowing add, remove, and search by roll number.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1012,
+    "eid": 1,
+    "setNo": 1,
+    "part": "B",
+    "title": "Set 1 \u2014 Part B: Implement exception handling to validate student data input (e.g....",
+    "body": "b) Implement exception handling to validate student data input (e.g., invalid age or marks).\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1021,
+    "eid": 1,
+    "setNo": 2,
+    "part": "A",
+    "title": "Set 2 \u2014 Part A: Write a program to store employee records in a HashMap (ID \u2192 Name...",
+    "body": "a) Write a program to store employee records in a HashMap (ID \u2192 Name) and display them using an iterator.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1022,
+    "eid": 1,
+    "setNo": 2,
+    "part": "B",
+    "title": "Set 2 \u2014 Part B: Create a thread that prints employee performance scores concurren...",
+    "body": "b) Create a thread that prints employee performance scores concurrently.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1031,
+    "eid": 1,
+    "setNo": 3,
+    "part": "A",
+    "title": "Set 3 \u2014 Part A: Use a TreeSet to maintain a sorted collection of city names enter...",
+    "body": "a) Use a TreeSet to maintain a sorted collection of city names entered by the user.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1032,
+    "eid": 1,
+    "setNo": 3,
+    "part": "B",
+    "title": "Set 3 \u2014 Part B: Implement file reading using BufferedReader to load the city list...",
+    "body": "b) Implement file reading using BufferedReader to load the city list from a file.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1041,
+    "eid": 1,
+    "setNo": 4,
+    "part": "A",
+    "title": "Set 4 \u2014 Part A: Design a program that uses LinkedList to simulate a queue of cust...",
+    "body": "a) Design a program that uses LinkedList to simulate a queue of customers in a bank.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1042,
+    "eid": 1,
+    "setNo": 4,
+    "part": "B",
+    "title": "Set 4 \u2014 Part B: Create a thread that prints each country name with delay....",
+    "body": "b) Create a thread that prints each country name with delay.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1051,
+    "eid": 1,
+    "setNo": 5,
+    "part": "A",
+    "title": "Set 5 \u2014 Part A: Use TreeMap to store product details (ID, Name) and display them ...",
+    "body": "a) Use TreeMap to store product details (ID, Name) and display them in ascending order of product ID.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1052,
+    "eid": 1,
+    "setNo": 5,
+    "part": "B",
+    "title": "Set 5 \u2014 Part B: Serialize the product list into a file and later deserialize it t...",
+    "body": "b) Serialize the product list into a file and later deserialize it to display all records.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1061,
+    "eid": 1,
+    "setNo": 6,
+    "part": "A",
+    "title": "Set 6 \u2014 Part A: Create a HashSet to eliminate duplicate book titles from user inp...",
+    "body": "a) Create a HashSet to eliminate duplicate book titles from user input.\n\nInput Format (stdin):\nFirst line: integer N.\nNext N lines: entries (may contain duplicates).\n\nOutput Format (stdout):\nPrint the count of unique entries followed by the unique entries in order of first appearance (one per line).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\nJava\nPython\nJava\nC\n",
+        "out": "3\nJava\nPython\nC",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nCBIT101\nCBIT101\nCBIT102\n",
+        "out": "2\nCBIT101\nCBIT102",
+        "hidden": 0
+      },
+      {
+        "inp": "5\nA1\nB2\nA1\nC3\nB2\n",
+        "out": "3\nA1\nB2\nC3",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nUnique1\nUnique1\n",
+        "out": "1\nUnique1",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1062,
+    "eid": 1,
+    "setNo": 6,
+    "part": "B",
+    "title": "Set 6 \u2014 Part B: Use file handling to save unique book titles to a file....",
+    "body": "b) Use file handling to save unique book titles to a file.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1071,
+    "eid": 1,
+    "setNo": 7,
+    "part": "A",
+    "title": "Set 7 \u2014 Part A: Implement a Comparator to sort a list of students by percentage....",
+    "body": "a) Implement a Comparator to sort a list of students by percentage.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1072,
+    "eid": 1,
+    "setNo": 7,
+    "part": "B",
+    "title": "Set 7 \u2014 Part B: Use a try-catch-finally block to handle division-by-zero errors d...",
+    "body": "b) Use a try-catch-finally block to handle division-by-zero errors during average calculation.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1081,
+    "eid": 1,
+    "setNo": 8,
+    "part": "A",
+    "title": "Set 8 \u2014 Part A: Develop a ListIterator example to navigate forward and backward t...",
+    "body": "a) Develop a ListIterator example to navigate forward and backward through a playlist of songs.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1082,
+    "eid": 1,
+    "setNo": 8,
+    "part": "B",
+    "title": "Set 8 \u2014 Part B: Create multiple threads to simulate songs playing concurrently....",
+    "body": "b) Create multiple threads to simulate songs playing concurrently.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1091,
+    "eid": 1,
+    "setNo": 9,
+    "part": "A",
+    "title": "Set 9 \u2014 Part A: Write a program using HashMap to represent inventory items with p...",
+    "body": "a) Write a program using HashMap to represent inventory items with product name and quantity.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1092,
+    "eid": 1,
+    "setNo": 9,
+    "part": "B",
+    "title": "Set 9 \u2014 Part B: Read the inventory details from a file using FileReader....",
+    "body": "b) Read the inventory details from a file using FileReader.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1101,
+    "eid": 1,
+    "setNo": 10,
+    "part": "A",
+    "title": "Set 10 \u2014 Part A: Use ArrayList to store and sort bank account balances using a lam...",
+    "body": "a) Use ArrayList to store and sort bank account balances using a lambda expression.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1102,
+    "eid": 1,
+    "setNo": 10,
+    "part": "B",
+    "title": "Set 10 \u2014 Part B: Use serialization to write bank details...",
+    "body": "b) Use serialization to write bank details\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1111,
+    "eid": 1,
+    "setNo": 11,
+    "part": "A",
+    "title": "Set 11 \u2014 Part A: Use a Set to maintain a unique list of registered voters....",
+    "body": "a) Use a Set to maintain a unique list of registered voters.\n\nInput Format (stdin):\nFirst line: integer N.\nNext N lines: entries (may contain duplicates).\n\nOutput Format (stdout):\nPrint the count of unique entries followed by the unique entries in order of first appearance (one per line).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\nJava\nPython\nJava\nC\n",
+        "out": "3\nJava\nPython\nC",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nCBIT101\nCBIT101\nCBIT102\n",
+        "out": "2\nCBIT101\nCBIT102",
+        "hidden": 0
+      },
+      {
+        "inp": "5\nA1\nB2\nA1\nC3\nB2\n",
+        "out": "3\nA1\nB2\nC3",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nUnique1\nUnique1\n",
+        "out": "1\nUnique1",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1112,
+    "eid": 1,
+    "setNo": 11,
+    "part": "B",
+    "title": "Set 11 \u2014 Part B: Use BufferedWriter to export the list to a text file....",
+    "body": "b) Use BufferedWriter to export the list to a text file.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1121,
+    "eid": 1,
+    "setNo": 12,
+    "part": "A",
+    "title": "Set 12 \u2014 Part A: Implement a TreeSet to keep a sorted list of book authors....",
+    "body": "a) Implement a TreeSet to keep a sorted list of book authors.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1122,
+    "eid": 1,
+    "setNo": 12,
+    "part": "B",
+    "title": "Set 12 \u2014 Part B: Demonstrate thread synchronization where two threads access the s...",
+    "body": "b) Demonstrate thread synchronization where two threads access the same book list.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1131,
+    "eid": 1,
+    "setNo": 13,
+    "part": "A",
+    "title": "Set 13 \u2014 Part A: Write a program using a Map to store student grades by subject....",
+    "body": "a) Write a program using a Map to store student grades by subject.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1132,
+    "eid": 1,
+    "setNo": 13,
+    "part": "B",
+    "title": "Set 13 \u2014 Part B: write a program to add student grades into a file....",
+    "body": "b) write a program to add student grades into a file.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1141,
+    "eid": 1,
+    "setNo": 14,
+    "part": "A",
+    "title": "Set 14 \u2014 Part A: Use LinkedList to simulate train bogies attachment and removal....",
+    "body": "a) Use LinkedList to simulate train bogies attachment and removal.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1142,
+    "eid": 1,
+    "setNo": 14,
+    "part": "B",
+    "title": "Set 14 \u2014 Part B: Use serialization to store train configuration objects....",
+    "body": "b) Use serialization to store train configuration objects.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1151,
+    "eid": 1,
+    "setNo": 15,
+    "part": "A",
+    "title": "Set 15 \u2014 Part A: Demonstrate the use of a functional interface with a lambda expre...",
+    "body": "a) Demonstrate the use of a functional interface with a lambda expression to calculate square of numbers.\n\nInput Format (stdin):\nFirst token: integer N.\nNext N space-separated integers.\n\nOutput Format (stdout):\nPrint the computed result (sum / maximum / filtered values) as specified.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\n10 20 30 40\n",
+        "out": "100",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n5 15 25\n",
+        "out": "45",
+        "hidden": 0
+      },
+      {
+        "inp": "5\n12 8 20 10 5\n",
+        "out": "55",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n100 200 300\n",
+        "out": "600",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1152,
+    "eid": 1,
+    "setNo": 15,
+    "part": "B",
+    "title": "Set 15 \u2014 Part B: Use file streams to write the data to a binary file....",
+    "body": "b) Use file streams to write the data to a binary file.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1161,
+    "eid": 1,
+    "setNo": 16,
+    "part": "A",
+    "title": "Set 16 \u2014 Part A: Create a HashMap to track login attempts per user....",
+    "body": "a) Create a HashMap to track login attempts per user.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1162,
+    "eid": 1,
+    "setNo": 16,
+    "part": "B",
+    "title": "Set 16 \u2014 Part B: Write a program to copy contents of one file to another(image)...",
+    "body": "b) Write a program to copy contents of one file to another(image)\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1171,
+    "eid": 1,
+    "setNo": 17,
+    "part": "A",
+    "title": "Set 17 \u2014 Part A: Write a program using ArrayList to store employee salaries and fi...",
+    "body": "a) Write a program using ArrayList to store employee salaries and find the maximum salary.\n\nInput Format (stdin):\nFirst token: integer N.\nNext N space-separated integers.\n\nOutput Format (stdout):\nPrint the computed result (sum / maximum / filtered values) as specified.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\n10 20 30 40\n",
+        "out": "100",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n5 15 25\n",
+        "out": "45",
+        "hidden": 0
+      },
+      {
+        "inp": "5\n12 8 20 10 5\n",
+        "out": "55",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n100 200 300\n",
+        "out": "600",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1172,
+    "eid": 1,
+    "setNo": 17,
+    "part": "B",
+    "title": "Set 17 \u2014 Part B: Write a program to copy contents of one file to another(pdf)...",
+    "body": "b) Write a program to copy contents of one file to another(pdf)\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1181,
+    "eid": 1,
+    "setNo": 18,
+    "part": "A",
+    "title": "Set 18 \u2014 Part A: Create a TreeMap to store university departments and display them...",
+    "body": "a) Create a TreeMap to store university departments and display them alphabetically.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1182,
+    "eid": 1,
+    "setNo": 18,
+    "part": "B",
+    "title": "Set 18 \u2014 Part B: Implement thread sleep and interruption for parallel department u...",
+    "body": "b) Implement thread sleep and interruption for parallel department updates.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1191,
+    "eid": 1,
+    "setNo": 19,
+    "part": "A",
+    "title": "Set 19 \u2014 Part A: Use HashSet to store unique course codes offered in a semester....",
+    "body": "a) Use HashSet to store unique course codes offered in a semester.\n\nInput Format (stdin):\nFirst line: integer N.\nNext N lines: entries (may contain duplicates).\n\nOutput Format (stdout):\nPrint the count of unique entries followed by the unique entries in order of first appearance (one per line).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\nJava\nPython\nJava\nC\n",
+        "out": "3\nJava\nPython\nC",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nCBIT101\nCBIT101\nCBIT102\n",
+        "out": "2\nCBIT101\nCBIT102",
+        "hidden": 0
+      },
+      {
+        "inp": "5\nA1\nB2\nA1\nC3\nB2\n",
+        "out": "3\nA1\nB2\nC3",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nUnique1\nUnique1\n",
+        "out": "1\nUnique1",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1192,
+    "eid": 1,
+    "setNo": 19,
+    "part": "B",
+    "title": "Set 19 \u2014 Part B: Save and read these codes from a file using FileWriter and FileRe...",
+    "body": "b) Save and read these codes from a file using FileWriter and FileReader.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1201,
+    "eid": 1,
+    "setNo": 20,
+    "part": "A",
+    "title": "Set 20 \u2014 Part A: Use a List to store and sort exam scores using lambda expressions...",
+    "body": "a) Use a List to store and sort exam scores using lambda expressions.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1202,
+    "eid": 1,
+    "setNo": 20,
+    "part": "B",
+    "title": "Set 20 \u2014 Part B: Throw a custom exception when a student\u2019s score is below a thresh...",
+    "body": "b) Throw a custom exception when a student\u2019s score is below a threshold.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1211,
+    "eid": 1,
+    "setNo": 21,
+    "part": "A",
+    "title": "Set 21 \u2014 Part A: Design a Map to store employee ID and designation....",
+    "body": "a) Design a Map to store employee ID and designation.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1212,
+    "eid": 1,
+    "setNo": 21,
+    "part": "B",
+    "title": "Set 21 \u2014 Part B: Use file streams to write the data to a binary file....",
+    "body": "b) Use file streams to write the data to a binary file.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1221,
+    "eid": 1,
+    "setNo": 22,
+    "part": "A",
+    "title": "Set 22 \u2014 Part A: Implement Comparator to sort students by GPA....",
+    "body": "a) Implement Comparator to sort students by GPA.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1222,
+    "eid": 1,
+    "setNo": 22,
+    "part": "B",
+    "title": "Set 22 \u2014 Part B: Catch and handle NullPointerException during GPA calculation....",
+    "body": "b) Catch and handle NullPointerException during GPA calculation.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1231,
+    "eid": 1,
+    "setNo": 23,
+    "part": "A",
+    "title": "Set 23 \u2014 Part A: Create a TreeSet for event participant names in alphabetical orde...",
+    "body": "a) Create a TreeSet for event participant names in alphabetical order.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1232,
+    "eid": 1,
+    "setNo": 23,
+    "part": "B",
+    "title": "Set 23 \u2014 Part B: Read participant names from a text file using buffered I/O....",
+    "body": "b) Read participant names from a text file using buffered I/O.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1241,
+    "eid": 1,
+    "setNo": 24,
+    "part": "A",
+    "title": "Set 24 \u2014 Part A: Write a program using LinkedList to simulate bus ticket booking s...",
+    "body": "a) Write a program using LinkedList to simulate bus ticket booking system.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1242,
+    "eid": 1,
+    "setNo": 24,
+    "part": "B",
+    "title": "Set 24 \u2014 Part B: Create threads to simulate multiple passengers booking tickets....",
+    "body": "b) Create threads to simulate multiple passengers booking tickets.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1251,
+    "eid": 1,
+    "setNo": 25,
+    "part": "A",
+    "title": "Set 25 \u2014 Part A: Demonstrate use of lambda to filter even numbers from a list....",
+    "body": "a) Demonstrate use of lambda to filter even numbers from a list.\n\nInput Format (stdin):\nFirst token: integer N.\nNext N space-separated integers.\n\nOutput Format (stdout):\nPrint the computed result (sum / maximum / filtered values) as specified.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\n10 20 30 40\n",
+        "out": "100",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n5 15 25\n",
+        "out": "45",
+        "hidden": 0
+      },
+      {
+        "inp": "5\n12 8 20 10 5\n",
+        "out": "55",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n100 200 300\n",
+        "out": "600",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1252,
+    "eid": 1,
+    "setNo": 25,
+    "part": "B",
+    "title": "Set 25 \u2014 Part B: Write exception handling for invalid list input from a file....",
+    "body": "b) Write exception handling for invalid list input from a file.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1261,
+    "eid": 1,
+    "setNo": 26,
+    "part": "A",
+    "title": "Set 26 \u2014 Part A: Create a HashMap to store bank customer names and account numbers...",
+    "body": "a) Create a HashMap to store bank customer names and account numbers.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1262,
+    "eid": 1,
+    "setNo": 26,
+    "part": "B",
+    "title": "Set 26 \u2014 Part B: Handle exceptions when reading invalid account data....",
+    "body": "b) Handle exceptions when reading invalid account data.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1271,
+    "eid": 1,
+    "setNo": 27,
+    "part": "A",
+    "title": "Set 27 \u2014 Part A: Use ArrayList and lambda expressions to calculate total bill from...",
+    "body": "a) Use ArrayList and lambda expressions to calculate total bill from a list of item prices.\n\nInput Format (stdin):\nFirst token: integer N.\nNext N space-separated integers.\n\nOutput Format (stdout):\nPrint the computed result (sum / maximum / filtered values) as specified.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\n10 20 30 40\n",
+        "out": "100",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n5 15 25\n",
+        "out": "45",
+        "hidden": 0
+      },
+      {
+        "inp": "5\n12 8 20 10 5\n",
+        "out": "55",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n100 200 300\n",
+        "out": "600",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1272,
+    "eid": 1,
+    "setNo": 27,
+    "part": "B",
+    "title": "Set 27 \u2014 Part B: Use finally to close resources safely after bill computation....",
+    "body": "b) Use finally to close resources safely after bill computation.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1281,
+    "eid": 1,
+    "setNo": 28,
+    "part": "A",
+    "title": "Set 28 \u2014 Part A: Write a TreeMap program to display employees sorted by department...",
+    "body": "a) Write a TreeMap program to display employees sorted by department.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1282,
+    "eid": 1,
+    "setNo": 28,
+    "part": "B",
+    "title": "Set 28 \u2014 Part B: Use multiple threads to calculate department-wise salary averages...",
+    "body": "b) Use multiple threads to calculate department-wise salary averages.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1291,
+    "eid": 1,
+    "setNo": 29,
+    "part": "A",
+    "title": "Set 29 \u2014 Part A: Create a HashSet to store unique email addresses from user input....",
+    "body": "a) Create a HashSet to store unique email addresses from user input.\n\nInput Format (stdin):\nFirst line: integer N.\nNext N lines: entries (may contain duplicates).\n\nOutput Format (stdout):\nPrint the count of unique entries followed by the unique entries in order of first appearance (one per line).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\nJava\nPython\nJava\nC\n",
+        "out": "3\nJava\nPython\nC",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nCBIT101\nCBIT101\nCBIT102\n",
+        "out": "2\nCBIT101\nCBIT102",
+        "hidden": 0
+      },
+      {
+        "inp": "5\nA1\nB2\nA1\nC3\nB2\n",
+        "out": "3\nA1\nB2\nC3",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nUnique1\nUnique1\n",
+        "out": "1\nUnique1",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1292,
+    "eid": 1,
+    "setNo": 29,
+    "part": "B",
+    "title": "Set 29 \u2014 Part B: Handle invalid email format using a custom exception....",
+    "body": "b) Handle invalid email format using a custom exception.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1301,
+    "eid": 1,
+    "setNo": 30,
+    "part": "A",
+    "title": "Set 30 \u2014 Part A: Implement a ListIterator for a movie rental system....",
+    "body": "a) Implement a ListIterator for a movie rental system.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1302,
+    "eid": 1,
+    "setNo": 30,
+    "part": "B",
+    "title": "Set 30 \u2014 Part B: Use file output streams to log rented movies....",
+    "body": "b) Use file output streams to log rented movies.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1311,
+    "eid": 1,
+    "setNo": 31,
+    "part": "A",
+    "title": "Set 31 \u2014 Part A: Use LinkedList to store service requests in a company....",
+    "body": "a) Use LinkedList to store service requests in a company.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1312,
+    "eid": 1,
+    "setNo": 31,
+    "part": "B",
+    "title": "Set 31 \u2014 Part B: Handle interrupted threads when simulating service responses....",
+    "body": "b) Handle interrupted threads when simulating service responses.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1321,
+    "eid": 1,
+    "setNo": 32,
+    "part": "A",
+    "title": "Set 32 \u2014 Part A: Create a Map for airport codes and city names....",
+    "body": "a) Create a Map for airport codes and city names.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1322,
+    "eid": 1,
+    "setNo": 32,
+    "part": "B",
+    "title": "Set 32 \u2014 Part B: Serialize the map and save it to a file....",
+    "body": "b) Serialize the map and save it to a file.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1331,
+    "eid": 1,
+    "setNo": 33,
+    "part": "A",
+    "title": "Set 33 \u2014 Part A: Implement a Comparator to sort players by match score....",
+    "body": "a) Implement a Comparator to sort players by match score.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1332,
+    "eid": 1,
+    "setNo": 33,
+    "part": "B",
+    "title": "Set 33 \u2014 Part B: Use try-catch to handle invalid player data....",
+    "body": "b) Use try-catch to handle invalid player data.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1341,
+    "eid": 1,
+    "setNo": 34,
+    "part": "A",
+    "title": "Set 34 \u2014 Part A: Use TreeSet for unique sorted customer IDs....",
+    "body": "a) Use TreeSet for unique sorted customer IDs.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1342,
+    "eid": 1,
+    "setNo": 34,
+    "part": "B",
+    "title": "Set 34 \u2014 Part B: Demonstrate synchronized access to the customer data by threads....",
+    "body": "b) Demonstrate synchronized access to the customer data by threads.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1351,
+    "eid": 1,
+    "setNo": 35,
+    "part": "A",
+    "title": "Set 35 \u2014 Part A: Use a List to store names of books and print them using an iterat...",
+    "body": "a) Use a List to store names of books and print them using an iterator.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1352,
+    "eid": 1,
+    "setNo": 35,
+    "part": "B",
+    "title": "Set 35 \u2014 Part B: Handle file-not-found exception while loading book data....",
+    "body": "b) Handle file-not-found exception while loading book data.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1361,
+    "eid": 1,
+    "setNo": 36,
+    "part": "A",
+    "title": "Set 36 \u2014 Part A: Create a Map for student roll number to grade mapping....",
+    "body": "a) Create a Map for student roll number to grade mapping.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1362,
+    "eid": 1,
+    "setNo": 36,
+    "part": "B",
+    "title": "Set 36 \u2014 Part B: Use file I/O to save results for backup....",
+    "body": "b) Use file I/O to save results for backup.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1371,
+    "eid": 1,
+    "setNo": 37,
+    "part": "A",
+    "title": "Set 37 \u2014 Part A: Implement HashMap to maintain product stock quantity....",
+    "body": "a) Implement HashMap to maintain product stock quantity.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1372,
+    "eid": 1,
+    "setNo": 37,
+    "part": "B",
+    "title": "Set 37 \u2014 Part B: Use threads to simulate customers buying products simultaneously....",
+    "body": "b) Use threads to simulate customers buying products simultaneously.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1381,
+    "eid": 1,
+    "setNo": 38,
+    "part": "A",
+    "title": "Set 38 \u2014 Part A: Write a program using LinkedList for restaurant order queue....",
+    "body": "a) Write a program using LinkedList for restaurant order queue.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1382,
+    "eid": 1,
+    "setNo": 38,
+    "part": "B",
+    "title": "Set 38 \u2014 Part B: Handle input/output errors when reading order details from a file...",
+    "body": "b) Handle input/output errors when reading order details from a file.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1391,
+    "eid": 1,
+    "setNo": 39,
+    "part": "A",
+    "title": "Set 39 \u2014 Part A: Use TreeMap to display countries and capitals alphabetically....",
+    "body": "a) Use TreeMap to display countries and capitals alphabetically.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1392,
+    "eid": 1,
+    "setNo": 39,
+    "part": "B",
+    "title": "Set 39 \u2014 Part B: Create a thread that prints each country name with delay....",
+    "body": "b) Create a thread that prints each country name with delay.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1401,
+    "eid": 1,
+    "setNo": 40,
+    "part": "A",
+    "title": "Set 40 \u2014 Part A: Use HashSet to remove duplicate vehicle registration numbers....",
+    "body": "a) Use HashSet to remove duplicate vehicle registration numbers.\n\nInput Format (stdin):\nFirst line: integer N.\nNext N lines: entries (may contain duplicates).\n\nOutput Format (stdout):\nPrint the count of unique entries followed by the unique entries in order of first appearance (one per line).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\nJava\nPython\nJava\nC\n",
+        "out": "3\nJava\nPython\nC",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nCBIT101\nCBIT101\nCBIT102\n",
+        "out": "2\nCBIT101\nCBIT102",
+        "hidden": 0
+      },
+      {
+        "inp": "5\nA1\nB2\nA1\nC3\nB2\n",
+        "out": "3\nA1\nB2\nC3",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nUnique1\nUnique1\n",
+        "out": "1\nUnique1",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1402,
+    "eid": 1,
+    "setNo": 40,
+    "part": "B",
+    "title": "Set 40 \u2014 Part B: Serialize the registration list for persistence....",
+    "body": "b) Serialize the registration list for persistence.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1411,
+    "eid": 1,
+    "setNo": 41,
+    "part": "A",
+    "title": "Set 41 \u2014 Part A: Demonstrate a lambda expression to sum elements of a list....",
+    "body": "a) Demonstrate a lambda expression to sum elements of a list.\n\nInput Format (stdin):\nFirst token: integer N.\nNext N space-separated integers.\n\nOutput Format (stdout):\nPrint the computed result (sum / maximum / filtered values) as specified.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\n10 20 30 40\n",
+        "out": "100",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n5 15 25\n",
+        "out": "45",
+        "hidden": 0
+      },
+      {
+        "inp": "5\n12 8 20 10 5\n",
+        "out": "55",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n100 200 300\n",
+        "out": "600",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1412,
+    "eid": 1,
+    "setNo": 41,
+    "part": "B",
+    "title": "Set 41 \u2014 Part B: Handle arithmetic exceptions during calculation....",
+    "body": "b) Handle arithmetic exceptions during calculation.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1421,
+    "eid": 1,
+    "setNo": 42,
+    "part": "A",
+    "title": "Set 42 \u2014 Part A: Use Map to track attendance percentage of students....",
+    "body": "a) Use Map to track attendance percentage of students.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1422,
+    "eid": 1,
+    "setNo": 42,
+    "part": "B",
+    "title": "Set 42 \u2014 Part B: Save this data to a file using BufferedWriter....",
+    "body": "b) Save this data to a file using BufferedWriter.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1431,
+    "eid": 1,
+    "setNo": 43,
+    "part": "A",
+    "title": "Set 43 \u2014 Part A: Implement Comparator for sorting projects by deadline date....",
+    "body": "a) Implement Comparator for sorting projects by deadline date.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1432,
+    "eid": 1,
+    "setNo": 43,
+    "part": "B",
+    "title": "Set 43 \u2014 Part B: Create threads to simulate project updates....",
+    "body": "b) Create threads to simulate project updates.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1441,
+    "eid": 1,
+    "setNo": 44,
+    "part": "A",
+    "title": "Set 44 \u2014 Part A: Create a Set of registered phone numbers....",
+    "body": "a) Create a Set of registered phone numbers.\n\nInput Format (stdin):\nFirst line: integer N.\nNext N lines: entries (may contain duplicates).\n\nOutput Format (stdout):\nPrint the count of unique entries followed by the unique entries in order of first appearance (one per line).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\nJava\nPython\nJava\nC\n",
+        "out": "3\nJava\nPython\nC",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nCBIT101\nCBIT101\nCBIT102\n",
+        "out": "2\nCBIT101\nCBIT102",
+        "hidden": 0
+      },
+      {
+        "inp": "5\nA1\nB2\nA1\nC3\nB2\n",
+        "out": "3\nA1\nB2\nC3",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nUnique1\nUnique1\n",
+        "out": "1\nUnique1",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1442,
+    "eid": 1,
+    "setNo": 44,
+    "part": "B",
+    "title": "Set 44 \u2014 Part B: Handle file write errors using exception handling....",
+    "body": "b) Handle file write errors using exception handling.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1451,
+    "eid": 1,
+    "setNo": 45,
+    "part": "A",
+    "title": "Set 45 \u2014 Part A: Use ArrayList to maintain shopping cart items....",
+    "body": "a) Use ArrayList to maintain shopping cart items.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1452,
+    "eid": 1,
+    "setNo": 45,
+    "part": "B",
+    "title": "Set 45 \u2014 Part B: Handle file reading errors for cart data....",
+    "body": "b) Handle file reading errors for cart data.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1461,
+    "eid": 1,
+    "setNo": 46,
+    "part": "A",
+    "title": "Set 46 \u2014 Part A: Write a TreeMap to store library members with membership IDs....",
+    "body": "a) Write a TreeMap to store library members with membership IDs.\n\nInput Format (stdin):\nFirst line: integer N (number of records/items).\nNext N lines/tokens: the items or key-value records to store and sort.\n\nOutput Format (stdout):\nPrint the sorted records/items, one per line (or space-separated in ascending order).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "3\nHyderabad\nChennai\nBengaluru\n",
+        "out": "Bengaluru\nChennai\nHyderabad",
+        "hidden": 0
+      },
+      {
+        "inp": "4\n40\n10\n30\n20\n",
+        "out": "10\n20\n30\n40",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nZeta\nAlpha\nOmega\n",
+        "out": "Alpha\nOmega\nZeta",
+        "hidden": 1
+      },
+      {
+        "inp": "4\n95\n72\n88\n64\n",
+        "out": "64\n72\n88\n95",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1462,
+    "eid": 1,
+    "setNo": 46,
+    "part": "B",
+    "title": "Set 46 \u2014 Part B: Use threads to simulate book issuance to multiple members....",
+    "body": "b) Use threads to simulate book issuance to multiple members.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1471,
+    "eid": 1,
+    "setNo": 47,
+    "part": "A",
+    "title": "Set 47 \u2014 Part A: Create a HashSet to store social media usernames....",
+    "body": "a) Create a HashSet to store social media usernames.\n\nInput Format (stdin):\nFirst line: integer N.\nNext N lines: entries (may contain duplicates).\n\nOutput Format (stdout):\nPrint the count of unique entries followed by the unique entries in order of first appearance (one per line).",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\nJava\nPython\nJava\nC\n",
+        "out": "3\nJava\nPython\nC",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nCBIT101\nCBIT101\nCBIT102\n",
+        "out": "2\nCBIT101\nCBIT102",
+        "hidden": 0
+      },
+      {
+        "inp": "5\nA1\nB2\nA1\nC3\nB2\n",
+        "out": "3\nA1\nB2\nC3",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nUnique1\nUnique1\n",
+        "out": "1\nUnique1",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1472,
+    "eid": 1,
+    "setNo": 47,
+    "part": "B",
+    "title": "Set 47 \u2014 Part B: Handle exceptions for invalid username input....",
+    "body": "b) Handle exceptions for invalid username input.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1481,
+    "eid": 1,
+    "setNo": 48,
+    "part": "A",
+    "title": "Set 48 \u2014 Part A: Implement ListIterator to traverse transaction history....",
+    "body": "a) Implement ListIterator to traverse transaction history.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1482,
+    "eid": 1,
+    "setNo": 48,
+    "part": "B",
+    "title": "Set 48 \u2014 Part B: Save transactions using object serialization....",
+    "body": "b) Save transactions using object serialization.\n\nInput Format (stdin):\nRead N lines of record data from standard input to write/serialize to a temporary file and read/deserialize back.\n\nOutput Format (stdout):\nPrint the deserialized/read lines followed by 'FILE_IO_SUCCESS'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nRecord_101\nRecord_102\n",
+        "out": "Record_101\nRecord_102\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nCBIT_Java_Lab\n",
+        "out": "CBIT_Java_Lab\nFILE_IO_SUCCESS",
+        "hidden": 0
+      },
+      {
+        "inp": "2\nItemA\nItemB\n",
+        "out": "ItemA\nItemB\nFILE_IO_SUCCESS",
+        "hidden": 1
+      },
+      {
+        "inp": "3\nR1\nR2\nR3\n",
+        "out": "R1\nR2\nR3\nFILE_IO_SUCCESS",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1491,
+    "eid": 1,
+    "setNo": 49,
+    "part": "A",
+    "title": "Set 49 \u2014 Part A: Use a lambda expression to filter high-scoring students from a li...",
+    "body": "a) Use a lambda expression to filter high-scoring students from a list.\n\nInput Format (stdin):\nFirst token: integer N.\nNext N space-separated integers.\n\nOutput Format (stdout):\nPrint the computed result (sum / maximum / filtered values) as specified.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "4\n10 20 30 40\n",
+        "out": "100",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n5 15 25\n",
+        "out": "45",
+        "hidden": 0
+      },
+      {
+        "inp": "5\n12 8 20 10 5\n",
+        "out": "55",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n100 200 300\n",
+        "out": "600",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1492,
+    "eid": 1,
+    "setNo": 49,
+    "part": "B",
+    "title": "Set 49 \u2014 Part B: Handle exceptions during file loading of student data....",
+    "body": "b) Handle exceptions during file loading of student data.\n\nInput Format (stdin):\nRead test input value(s) from standard input.\n\nOutput Format (stdout):\nIf input is valid, print 'VALID: <result>'. If invalid or an exception occurs, catch the exception and print 'EXCEPTION_HANDLED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "85\n",
+        "out": "VALID: 85",
+        "hidden": 0
+      },
+      {
+        "inp": "-5\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 0
+      },
+      {
+        "inp": "100\n",
+        "out": "VALID: 100",
+        "hidden": 1
+      },
+      {
+        "inp": "0\n",
+        "out": "EXCEPTION_HANDLED",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1501,
+    "eid": 1,
+    "setNo": 50,
+    "part": "A",
+    "title": "Set 50 \u2014 Part A: Write a Map to store employee name and salary pairs....",
+    "body": "a) Write a Map to store employee name and salary pairs.\n\nInput Format (stdin):\nFirst line: integer N (number of operations/records).\nNext N lines: record entries (ID and Name/Value).\n\nOutput Format (stdout):\nDisplay the stored collection records in order, one per line as 'ID: Value'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\n101 Alice\n102 Bob\n",
+        "out": "101: Alice\n102: Bob",
+        "hidden": 0
+      },
+      {
+        "inp": "3\n201 CSE\n202 IT\n203 ECE\n",
+        "out": "201: CSE\n202: IT\n203: ECE",
+        "hidden": 0
+      },
+      {
+        "inp": "2\n301 Java\n302 Python\n",
+        "out": "301: Java\n302: Python",
+        "hidden": 1
+      },
+      {
+        "inp": "3\n1 A\n2 B\n3 C\n",
+        "out": "1: A\n2: B\n3: C",
+        "hidden": 1
+      }
+    ]
+  },
+  {
+    "id": 1502,
+    "eid": 1,
+    "setNo": 50,
+    "part": "B",
+    "title": "Set 50 \u2014 Part B: Implement thread synchronization while updating salaries....",
+    "body": "b) Implement thread synchronization while updating salaries.\n\nInput Format (stdin):\nFirst token: integer N (number of tasks/items for worker threads).\nNext N tokens: task items.\n\nOutput Format (stdout):\nExecute the worker thread(s) in synchronized order and print 'PROCESSED: <item>' for each item, followed by 'THREADS_COMPLETED'.",
+    "marks": 10,
+    "mode": "partial",
+    "tests": [
+      {
+        "inp": "2\nTaskA TaskB\n",
+        "out": "PROCESSED: TaskA\nPROCESSED: TaskB\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "3\nT1 T2 T3\n",
+        "out": "PROCESSED: T1\nPROCESSED: T2\nPROCESSED: T3\nTHREADS_COMPLETED",
+        "hidden": 0
+      },
+      {
+        "inp": "1\nSyncJob\n",
+        "out": "PROCESSED: SyncJob\nTHREADS_COMPLETED",
+        "hidden": 1
+      },
+      {
+        "inp": "2\nAlpha Beta\n",
+        "out": "PROCESSED: Alpha\nPROCESSED: Beta\nTHREADS_COMPLETED",
+        "hidden": 1
+      }
+    ]
+  }
+]
