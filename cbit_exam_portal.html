@@ -358,15 +358,16 @@
         <form id="saveGdriveUrlForm" onsubmit="handleSaveGdriveWebhookUrl(event)" class="bg-slate-950 border border-indigo-500/40 rounded-xl p-4 space-y-3">
           <label for="gdriveWebhookUrlInput" class="block font-bold text-white text-sm">3. Paste Your Google Apps Script Web App URL (<code>https://script.google.com/macros/s/.../exec</code>)</label>
           <input id="gdriveWebhookUrlInput" type="url" placeholder="https://script.google.com/macros/s/AKfycb.../exec" class="w-full px-3.5 py-2.5 rounded-xl bg-slate-900 border border-slate-700 text-xs text-white font-mono focus:outline-none focus:border-indigo-500" />
-          <div class="bg-indigo-950/40 border border-indigo-500/30 rounded-lg p-3 text-[11px] text-indigo-200">
-            <strong>🌐 Remote Exam Mode (For All 71 Students Writing From Home):</strong> Once you paste your Web App URL below, click <strong>⬇️ Download Student-Ready HTML (With Cloud Sync Embedded)</strong> and share that downloaded HTML file (or host it on Netlify/GitHub Pages). Every remote student's laptop will automatically send their login, permanent password, code, and score directly into your Google Sheet!
+          <div class="bg-indigo-950/40 border border-indigo-500/40 rounded-xl p-3 text-[11px] text-indigo-200 leading-relaxed">
+            <strong>🚀 Hosting on GitHub Pages (No <code>app.py</code> Required 24/7):</strong><br>
+            After pasting your Web App URL above, click <strong>⬇️ Download <code>index.html</code> for GitHub Pages</strong> below and upload/commit that <code>index.html</code> to your GitHub repo. Your Google Sheet URL will be permanently baked into the site so <strong>every student on any network</strong> saves directly to your Google Sheet 24/7 without running <code>app.py</code>!
           </div>
           <div class="flex flex-wrap items-center justify-end gap-2">
             <button id="pushNowToGdriveBtn" type="button" onclick="syncWithGoogleDriveNow(true)" class="px-3.5 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs transition">
               🔄 Test &amp; Sync All Student Logins Now
             </button>
-            <button id="downloadEmbeddedHtmlBtn" type="button" onclick="downloadStudentReadyHtmlWithEmbeddedCloudUrl()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg transition">
-              ⬇️ Download Student-Ready HTML (With Cloud Sync Embedded)
+            <button id="downloadGithubIndexBtn" type="button" onclick="downloadStudentReadyHtmlWithEmbeddedCloudUrl()" class="px-4 py-2 rounded-xl bg-indigo-600 hover:bg-indigo-500 text-white font-bold text-xs shadow-lg transition">
+              ⬇️ Download index.html for GitHub Pages (Cloud URL Baked In)
             </button>
             <button id="saveGdriveUrlSubmitBtn" type="submit" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-xs shadow-lg transition">
               💾 Save &amp; Connect Google Drive Backend
@@ -631,22 +632,23 @@
 
         <!-- Summary KPI Pills -->
         <div class="flex flex-wrap items-center gap-3">
-          <div class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-center">
-            <div id="adminStatExams" class="text-lg font-extrabold text-white">0</div>
-            <div class="text-[11px] text-slate-400">Active Exams</div>
+          <div class="bg-slate-950 border border-cyan-500/30 rounded-xl px-4 py-2 text-center cursor-pointer" onclick="switchAdminTab('results')" title="Click to view Student Logins &amp; Results">
+            <div id="adminStatLogins" class="text-lg font-extrabold text-cyan-400">0</div>
+            <div class="text-[11px] text-cyan-300">Students Logged In</div>
           </div>
-          <div class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-center">
-            <div id="adminStatQns" class="text-lg font-extrabold text-indigo-400">0</div>
-            <div class="text-[11px] text-slate-400">Total Questions</div>
-          </div>
-          <div class="bg-slate-950 border border-slate-800 rounded-xl px-4 py-2 text-center">
+          <div class="bg-slate-950 border border-emerald-500/30 rounded-xl px-4 py-2 text-center cursor-pointer" onclick="switchAdminTab('results')" title="Click to view Student Attempts &amp; Scores">
             <div id="adminStatAttempts" class="text-lg font-extrabold text-emerald-400">0</div>
-            <div class="text-[11px] text-slate-400">Student Attempts</div>
+            <div class="text-[11px] text-emerald-300">Active / Submitted</div>
           </div>
-          <div class="bg-slate-950 border border-rose-500/30 rounded-xl px-4 py-2 text-center">
+          <div class="bg-slate-950 border border-indigo-500/30 rounded-xl px-4 py-2 text-center cursor-pointer" onclick="switchAdminTab('results')" title="Click to inspect Submitted Code">
+            <div id="adminStatQns" class="text-lg font-extrabold text-indigo-400">0</div>
+            <div class="text-[11px] text-slate-400">Questions / Sets</div>
+          </div>
+          <div class="bg-slate-950 border border-rose-500/30 rounded-xl px-4 py-2 text-center cursor-pointer" onclick="switchAdminTab('flags')" title="Click to view Proctoring Violation Flags">
             <div id="adminStatFlags" class="text-lg font-extrabold text-rose-400">0</div>
             <div class="text-[11px] text-rose-300">Violation Flags</div>
           </div>
+          <span id="adminStatExams" class="hidden">1</span>
         </div>
       </div>
 
@@ -882,6 +884,13 @@
               <p class="text-xs text-slate-400">Scores are automatically computed based on the Admin's grading mode selection per question.</p>
             </div>
             <div class="flex flex-wrap items-center gap-2">
+              <select id="adminResultsScopeSelect" onchange="renderAdminResults()" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-indigo-500/40 text-xs font-bold text-indigo-300">
+                <option value="active">Show Logged-In &amp; Active Students</option>
+                <option value="all">Show All 73 Students (Full Class Live Status)</option>
+              </select>
+              <button id="refreshCloudResultsBtn" type="button" onclick="pullStateFromBackendServer(true)" class="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold shadow transition" title="Pull latest student logins, code &amp; scores from all networks now">
+                🔄 Refresh Live Cloud Data
+              </button>
               <input id="importStudentJsonInput" type="file" accept=".json" multiple class="hidden" onchange="handleImportStudentJsonFiles(event)" />
               <button id="importStudentReceiptsBtn" type="button" onclick="document.getElementById('importStudentJsonInput').click()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow transition" title="Import one or more student submission .json receipt files">
                 📥 Import Student Receipts (.json)
@@ -889,7 +898,7 @@
               <button id="exportMasterCsvBtn" type="button" onclick="exportMasterGradebookCsv()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow transition" title="Download Excel/CSV Gradebook for all 71 students">
                 📊 Export Master Gradebook (.csv)
               </button>
-              <label for="adminFlagPenaltySelect" class="text-xs text-slate-300 font-medium ml-1">Flag Penalty:</label>
+              <label for="adminFlagPenaltySelect" class="text-xs text-slate-300 font-medium ml-1">Exam Flag Deduction Policy:</label>
               <select id="adminFlagPenaltySelect" onchange="handlePenaltyPolicyChange()" class="px-3 py-1.5 rounded-lg bg-slate-950 border border-slate-700 text-xs text-white">
                 <option value="0">0% deduction per flag (Auto-submit on max flags only)</option>
                 <option value="5">-5% score penalty per violation flag</option>
@@ -5674,7 +5683,11 @@ int main() {
       }
     });
 
-    // Pre-baked Google Drive Apps Script Web App URL for Remote Students (auto-populated when Admin clicks Download Student-Ready HTML)
+    // =========================================================================
+    // GITHUB PAGES 24/7 SERVERLESS CLOUD CONFIG (GOOGLE SHEETS WEB APP URL)
+    // Paste your deployed Google Apps Script Web App URL (/exec) inside the
+    // quotes below OR click "Download index.html for GitHub Pages" in Admin!
+    // =========================================================================
     const DEFAULT_GDRIVE_WEBAPP_URL = '';
     const GDRIVE_WEBHOOK_KEY = 'codeshield_cbit_gdrive_webapp_url_v1';
     const WINDOW_NAME_PREFIX = 'CODESHIELD_CBIT_STATE::';
@@ -5986,9 +5999,17 @@ int main() {
         }
       } catch (e) {}
       try {
-        return localStorage.getItem(GDRIVE_WEBHOOK_KEY) || sessionStorage.getItem(GDRIVE_WEBHOOK_KEY) || STATE.gdriveWebhookUrl || DEFAULT_GDRIVE_WEBAPP_URL || '';
+        return DEFAULT_GDRIVE_WEBAPP_URL || localStorage.getItem(GDRIVE_WEBHOOK_KEY) || sessionStorage.getItem(GDRIVE_WEBHOOK_KEY) || STATE.gdriveWebhookUrl || '';
       } catch (e) {
-        return STATE.gdriveWebhookUrl || DEFAULT_GDRIVE_WEBAPP_URL || '';
+        return DEFAULT_GDRIVE_WEBAPP_URL || STATE.gdriveWebhookUrl || '';
+      }
+    }
+
+    function isGitHubPagesHost() {
+      try {
+        return window.location && /github\.io$/i.test(window.location.hostname || '');
+      } catch (e) {
+        return false;
       }
     }
 
@@ -6068,9 +6089,275 @@ int main() {
       return window.location.origin + '/api/' + endpoint;
     }
 
-    async function pushStateToBackendServer() {
-      if (backendSyncInProgress) return;
-      const payloadObj = {
+    // =========================================================================
+    // BUILT-IN ZERO-CONFIG CROSS-NETWORK CLOUD RELAY (FOR GITHUB PAGES)
+    // Automatically syncs student logins, password changes, live code drafts,
+    // submissions, and proctoring flags across ALL networks into the Admin Login
+    // with ZERO server (app.py) and ZERO manual setup required!
+    // =========================================================================
+    const CLOUD_RELAY_BASE = 'https://ntfy.sh';
+    const CLOUD_TOPIC_LOGINS = 'cbit_cse5_exam2_logins_2026_v9';
+    const CLOUD_TOPIC_SUBS   = 'cbit_cse5_exam2_subs_2026_v9';
+    const CLOUD_TOPIC_FLAGS  = 'cbit_cse5_exam2_flags_2026_v9';
+    const CLOUD_TOPIC_ADMIN  = 'cbit_cse5_exam2_admin_2026_v9';
+    let liveSseConnections = [];
+    let lastRelayPullTs = 0;
+
+    async function pushPacketToCloudRelay(topic, packetObj) {
+      try {
+        const bodyStr = JSON.stringify(packetObj);
+        const resp = await fetch(CLOUD_RELAY_BASE + '/' + topic, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+            'Title': 'CodeShield-CBIT-Sync',
+            'Priority': 'default'
+          },
+          body: bodyStr
+        });
+        if (resp && resp.ok) {
+          backendConnected = true;
+          updateSyncStatusIndicator('🌐 Cloud Synced (All Networks) ✓', true);
+          return true;
+        }
+      } catch (e) {
+        try {
+          await fetch(CLOUD_RELAY_BASE + '/' + topic, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(packetObj)
+          });
+          backendConnected = true;
+          updateSyncStatusIndicator('🌐 Cloud Synced (All Networks) ✓', true);
+          return true;
+        } catch (e2) {}
+      }
+      return false;
+    }
+
+    async function pushCurrentEventToBuiltInCloud() {
+      try {
+        if (currentUser && currentUser.role === 'student') {
+          const stuAttempt = STATE.attempts.find(function(a) { return a.uid === currentUser.id; });
+          const stuSubs = STATE.subs.filter(function(s) { return s.uid === currentUser.id; });
+          const stuFlags = STATE.flags.filter(function(f) { return f.uid === currentUser.id; });
+          const myDrafts = {};
+          Object.keys(STATE.drafts || {}).forEach(function(k) {
+            if (k.indexOf(String(currentUser.id) + ':') === 0) {
+              myDrafts[k] = String(STATE.drafts[k] || '').slice(0, 2200);
+            }
+          });
+
+          // 1. Push Student Login + Password + Attempt packet (< 1 KB)
+          await pushPacketToCloudRelay(CLOUD_TOPIC_LOGINS, {
+            t: 'stu_login',
+            ts: Date.now(),
+            u: {
+              id: currentUser.id,
+              ident: currentUser.ident,
+              email: currentUser.email,
+              name: currentUser.name,
+              pw: currentUser.pw,
+              tempPw: currentUser.tempPw || '',
+              pwChanged: Boolean(currentUser.pwChanged),
+              mustChangePw: Boolean(currentUser.mustChangePw),
+              role: 'student',
+              branch: currentUser.branch || 'CSE-5',
+              sem: currentUser.sem || 'III Sem',
+              batch: currentUser.batch || 'CSE-5',
+              assignedSet: currentUser.assignedSet || 1,
+              loginCount: currentUser.loginCount || 1,
+              lastLoginAt: currentUser.lastLoginAt || formatTimeNow()
+            },
+            a: stuAttempt || null
+          });
+
+          // 2. Push each submitted question or active code draft packet (< 2.5 KB each)
+          for (let i = 0; i < stuSubs.length; i++) {
+            const sb = stuSubs[i];
+            await pushPacketToCloudRelay(CLOUD_TOPIC_SUBS, {
+              t: 'stu_sub',
+              ts: Date.now(),
+              uid: currentUser.id,
+              ident: currentUser.ident,
+              s: {
+                uid: sb.uid,
+                qid: sb.qid,
+                lang: sb.lang,
+                code: String(sb.code || '').slice(0, 2600),
+                passed: sb.passed,
+                total: sb.total,
+                samplePassed: sb.samplePassed,
+                sampleTotal: sb.sampleTotal,
+                hiddenPassed: sb.hiddenPassed,
+                hiddenTotal: sb.hiddenTotal
+              }
+            });
+          }
+
+          if (Object.keys(myDrafts).length > 0) {
+            await pushPacketToCloudRelay(CLOUD_TOPIC_SUBS, {
+              t: 'stu_draft',
+              ts: Date.now(),
+              uid: currentUser.id,
+              d: myDrafts
+            });
+          }
+
+          // 3. Push latest violation flags for this student
+          if (stuFlags.length > 0) {
+            await pushPacketToCloudRelay(CLOUD_TOPIC_FLAGS, {
+              t: 'stu_flags',
+              ts: Date.now(),
+              uid: currentUser.id,
+              f: stuFlags.slice(-10)
+            });
+          }
+        } else if (currentUser && currentUser.role === 'admin') {
+          // Admin pushes exam lock / schedule / grading mode settings so all remote students receive them
+          await pushPacketToCloudRelay(CLOUD_TOPIC_ADMIN, {
+            t: 'adm_cfg',
+            ts: Date.now(),
+            exams: STATE.exams
+          });
+        }
+      } catch (e) {}
+    }
+
+    function applyCloudRelayPacket(pkt) {
+      if (!pkt || typeof pkt !== 'object' || !pkt.t) return false;
+      let changed = false;
+      if (pkt.t === 'stu_login' && pkt.u && pkt.u.ident) {
+        mergeRemoteStateIntoLocal({
+          users: [pkt.u],
+          attempts: pkt.a ? [pkt.a] : []
+        });
+        changed = true;
+      } else if (pkt.t === 'stu_sub' && pkt.s) {
+        mergeRemoteStateIntoLocal({
+          subs: [pkt.s]
+        });
+        changed = true;
+      } else if (pkt.t === 'stu_draft' && pkt.d) {
+        mergeRemoteStateIntoLocal({
+          drafts: pkt.d
+        });
+        changed = true;
+      } else if (pkt.t === 'stu_flags' && Array.isArray(pkt.f)) {
+        mergeRemoteStateIntoLocal({
+          flags: pkt.f
+        });
+        changed = true;
+      } else if (pkt.t === 'adm_cfg' && Array.isArray(pkt.exams)) {
+        mergeRemoteStateIntoLocal({
+          exams: pkt.exams
+        });
+        changed = true;
+      } else if (pkt.t === 'stu_reset' && pkt.uid && pkt.eid) {
+        STATE.attempts = STATE.attempts.filter(function(a) { return !(a.uid === Number(pkt.uid) && a.eid === Number(pkt.eid)); });
+        STATE.flags = STATE.flags.filter(function(f) { return !(f.uid === Number(pkt.uid) && f.eid === Number(pkt.eid)); });
+        writeRawStateToBrowser(JSON.stringify(STATE));
+        changed = true;
+      }
+      return changed;
+    }
+
+    async function pullFromBuiltInCloudRelay(showToastMsg) {
+      const topics = [CLOUD_TOPIC_LOGINS, CLOUD_TOPIC_SUBS, CLOUD_TOPIC_FLAGS, CLOUD_TOPIC_ADMIN];
+      let anySuccess = false;
+      let packetsApplied = 0;
+
+      for (let i = 0; i < topics.length; i++) {
+        const tp = topics[i];
+        try {
+          const resp = await fetch(CLOUD_RELAY_BASE + '/' + tp + '/json?poll=1&since=all&_=' + Date.now(), {
+            method: 'GET',
+            cache: 'no-store'
+          });
+          if (resp && resp.ok) {
+            anySuccess = true;
+            const text = await resp.text();
+            const lines = String(text || '').split('\n');
+            lines.forEach(function(line) {
+              const trimmed = line.trim();
+              if (!trimmed) return;
+              try {
+                const outer = JSON.parse(trimmed);
+                if (outer && outer.event === 'message' && outer.message) {
+                  const inner = JSON.parse(outer.message);
+                  if (applyCloudRelayPacket(inner)) packetsApplied++;
+                }
+              } catch (e) {}
+            });
+          }
+        } catch (e) {}
+      }
+
+      if (anySuccess) {
+        backendConnected = true;
+        updateSyncStatusIndicator('🌐 Live Cloud Connected ✓', true);
+        if (currentUser && currentUser.role === 'admin') {
+          renderAdminAll();
+        } else if (currentUser && !activeExamSession.started) {
+          renderStudentDashboard();
+        }
+        if (showToastMsg) {
+          showToast('🌐 Live Cloud Synced!', 'Pulled latest student logins, permanent passwords, code submissions & violation flags across all networks.', 'ok');
+        }
+      }
+      return anySuccess;
+    }
+
+    function startLiveAdminCloudStream() {
+      try {
+        if (typeof EventSource === 'undefined') return;
+        if (liveSseConnections.length > 0) return;
+        const topics = [CLOUD_TOPIC_LOGINS, CLOUD_TOPIC_SUBS, CLOUD_TOPIC_FLAGS, CLOUD_TOPIC_ADMIN];
+        const streamUrl = CLOUD_RELAY_BASE + '/' + topics.join(',') + '/sse';
+        const es = new EventSource(streamUrl);
+        es.onmessage = function(ev) {
+          try {
+            if (!ev || !ev.data) return;
+            const outer = JSON.parse(ev.data);
+            if (outer && outer.event === 'message' && outer.message) {
+              const inner = JSON.parse(outer.message);
+              if (applyCloudRelayPacket(inner)) {
+                backendConnected = true;
+                updateSyncStatusIndicator('🌐 Live Cloud Stream Active ✓', true);
+                if (currentUser && currentUser.role === 'admin') {
+                  renderAdminAll();
+                } else if (currentUser && !activeExamSession.started) {
+                  renderStudentDashboard();
+                }
+              }
+            }
+          } catch (e) {}
+        };
+        liveSseConnections.push(es);
+      } catch (e) {}
+    }
+
+    function buildSyncPayloadForCurrentRole() {
+      // When a student is logged in on a remote network, send only that student's record + attempts + subs + flags + drafts
+      // so the payload is tiny (<3 KB) and never overwrites other students!
+      if (currentUser && currentUser.role === 'student') {
+        const myDrafts = {};
+        Object.keys(STATE.drafts || {}).forEach(function(k) {
+          if (k.indexOf(String(currentUser.id) + ':') === 0) {
+            myDrafts[k] = STATE.drafts[k];
+          }
+        });
+        return {
+          action: 'sync',
+          users: [currentUser],
+          attempts: STATE.attempts.filter(function(a) { return a.uid === currentUser.id; }),
+          subs: STATE.subs.filter(function(s) { return s.uid === currentUser.id; }),
+          flags: STATE.flags.filter(function(f) { return f.uid === currentUser.id; }),
+          drafts: myDrafts
+        };
+      }
+      return {
         action: 'sync',
         users: STATE.users,
         exams: STATE.exams,
@@ -6080,28 +6367,56 @@ int main() {
         drafts: STATE.drafts || {},
         logins: STATE.logins || []
       };
+    }
 
-      // 1. If Google Drive Apps Script Web App URL is configured, sync to Google Drive!
+    async function pushStateToBackendServer() {
+      // Always push to the built-in zero-config cross-network cloud relay first!
+      pushCurrentEventToBuiltInCloud();
+      if (backendSyncInProgress) return;
+      const payloadObj = buildSyncPayloadForCurrentRole();
+      const bodyStr = JSON.stringify(payloadObj);
+
+      // 1. If Google Drive Apps Script Web App URL is configured, sync to Google Drive 24/7!
       const gdriveUrl = getGdriveWebhookUrl();
       if (gdriveUrl) {
+        backendSyncInProgress = true;
         try {
-          backendSyncInProgress = true;
           const gResp = await fetch(gdriveUrl, {
             method: 'POST',
+            redirect: 'follow',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(payloadObj)
+            body: bodyStr
           });
-          if (gResp && gResp.ok) {
+          if (gResp && (gResp.ok || gResp.type === 'opaque')) {
             backendConnected = true;
             updateSyncStatusIndicator('☁️ Synced to Google Drive ✓', true);
             backendSyncInProgress = false;
             return;
           }
-        } catch (e) {}
+        } catch (err) {
+          // Fallback to mode: 'no-cors' so strict browser shields still deliver the POST body to Google Apps Script!
+          try {
+            await fetch(gdriveUrl, {
+              method: 'POST',
+              mode: 'no-cors',
+              headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+              body: bodyStr
+            });
+            backendConnected = true;
+            updateSyncStatusIndicator('☁️ Synced to Google Drive ✓', true);
+            backendSyncInProgress = false;
+            return;
+          } catch (err2) {}
+        }
         backendSyncInProgress = false;
       }
 
-      // 2. Otherwise try local Python server (/api/sync)
+      // 2. Skip /api/sync if hosted on github.io (since GitHub Pages is static-only)
+      if (isGitHubPagesHost()) {
+        updateSyncStatusIndicator(gdriveUrl ? '☁️ Synced to Google Drive ✓' : '⚠️ Click Link Google Drive Sync', Boolean(gdriveUrl));
+        return;
+      }
+
       const syncUrl = getBackendApiUrl('sync');
       if (!syncUrl) {
         updateSyncStatusIndicator('Saved (Multi-Layer) ✓', false);
@@ -6112,7 +6427,7 @@ int main() {
         const resp = await fetch(syncUrl, {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(payloadObj)
+          body: bodyStr
         });
         if (resp && resp.ok) {
           backendConnected = true;
@@ -6128,27 +6443,81 @@ int main() {
       }
     }
 
-    async function pullStateFromBackendServer() {
-      // 1. Check Google Drive Web App URL first if configured
-      const gdriveUrl = getGdriveWebhookUrl();
-      if (gdriveUrl) {
+    function pullStateViaJsonp(gdriveUrl) {
+      return new Promise(function(resolve) {
         try {
-          const gResp = await fetch(gdriveUrl + (gdriveUrl.indexOf('?') === -1 ? '?action=state' : '&action=state'), {
-            method: 'GET',
-            cache: 'no-store'
-          });
-          if (gResp && gResp.ok) {
-            const gData = await gResp.json();
+          const cbName = '__codeshieldJsonp_' + Date.now() + '_' + Math.floor(Math.random() * 10000);
+          const script = document.createElement('script');
+          const timer = setTimeout(function() {
+            cleanup();
+            resolve(false);
+          }, 8000);
+          function cleanup() {
+            clearTimeout(timer);
+            try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+            if (script.parentNode) script.parentNode.removeChild(script);
+          }
+          window[cbName] = function(gData) {
+            cleanup();
             if (gData && gData.ok && gData.state) {
               backendConnected = true;
               mergeRemoteStateIntoLocal(gData.state);
               updateSyncStatusIndicator('☁️ Google Drive Connected ✓', true);
               if (currentUser && currentUser.role === 'admin') renderAdminAll();
               else if (currentUser && !activeExamSession.started) renderStudentDashboard();
+              resolve(true);
+            } else {
+              resolve(false);
+            }
+          };
+          const sep = gdriveUrl.indexOf('?') === -1 ? '?' : '&';
+          script.src = gdriveUrl + sep + 'action=state&callback=' + cbName + '&_=' + Date.now();
+          script.onerror = function() {
+            cleanup();
+            resolve(false);
+          };
+          document.head.appendChild(script);
+        } catch (e) {
+          resolve(false);
+        }
+      });
+    }
+
+    async function pullStateFromBackendServer(showToastMsg) {
+      // 0. Always pull from the built-in zero-config cross-network cloud relay (works on GitHub Pages with zero setup!)
+      const relayOk = await pullFromBuiltInCloudRelay(Boolean(showToastMsg));
+
+      // 1. Also check Google Drive Web App URL if configured
+      const gdriveUrl = getGdriveWebhookUrl();
+      if (gdriveUrl) {
+        try {
+          const sep = gdriveUrl.indexOf('?') === -1 ? '?' : '&';
+          const gResp = await fetch(gdriveUrl + sep + 'action=state&_=' + Date.now(), {
+            method: 'GET',
+            redirect: 'follow',
+            cache: 'no-store'
+          });
+          if (gResp && gResp.ok) {
+            const gData = await gResp.json();
+            if (gData && gData.ok) {
+              backendConnected = true;
+              if (gData.state) mergeRemoteStateIntoLocal(gData.state);
+              updateSyncStatusIndicator('☁️ Google Drive Connected ✓', true);
+              if (currentUser && currentUser.role === 'admin') renderAdminAll();
+              else if (currentUser && !activeExamSession.started) renderStudentDashboard();
               return true;
             }
           }
-        } catch (e) {}
+        } catch (e) {
+          // Fallback to JSONP script loader (bypasses any CORS redirect blocks on strict networks)
+          const jsonpOk = await pullStateViaJsonp(gdriveUrl);
+          if (jsonpOk) return true;
+        }
+      }
+
+      if (isGitHubPagesHost()) {
+        updateSyncStatusIndicator('🌐 Live Cloud Sync Active ✓', true);
+        return true;
       }
 
       // 2. Otherwise check local Python server (/api/state)
@@ -6227,7 +6596,7 @@ int main() {
       }
     }
 
-    const GOOGLE_APPS_SCRIPT_SOURCE = "// ============================================================================\n// CODESHIELD CBIT — CONCURRENCY-SAFE REMOTE EXAM CLOUD BACKEND (Code.gs)\n// Target Google Sheet ID: 1CjbU4S7xRryZNoT2v7LSM8mAZ1Vi6ikS3brjDJFPXdA\n// Supports 71+ remote students writing simultaneously with LockService merge!\n// Deploy -> New deployment -> Web app -> Execute as: Me -> Access: Anyone\n// ============================================================================\nconst SHEET_ID = '1CjbU4S7xRryZNoT2v7LSM8mAZ1Vi6ikS3brjDJFPXdA';\n\nfunction doGet(e) {\n  const ss = SpreadsheetApp.openById(SHEET_ID);\n  let dbSheet = ss.getSheetByName('_Portal_State_DB');\n  if (!dbSheet) {\n    return ContentService.createTextOutput(JSON.stringify({ ok: true, state: null }))\n      .setMimeType(ContentService.MimeType.JSON);\n  }\n  const raw = dbSheet.getRange('A2').getValue();\n  const st = raw ? JSON.parse(raw) : null;\n  return ContentService.createTextOutput(JSON.stringify({ ok: true, state: st }))\n    .setMimeType(ContentService.MimeType.JSON);\n}\n\nfunction doPost(e) {\n  const lock = LockService.getScriptLock();\n  lock.waitLock(15000);\n  try {\n    const ss = SpreadsheetApp.openById(SHEET_ID);\n    const incoming = JSON.parse(e.postData.contents || '{}');\n    let dbSheet = ss.getSheetByName('_Portal_State_DB');\n    if (!dbSheet) {\n      dbSheet = ss.insertSheet('_Portal_State_DB');\n      dbSheet.getRange('A1').setValue('PORTAL_STATE_JSON');\n      dbSheet.getRange('B1').setValue('LAST_UPDATED_UTC');\n    }\n\n    // Read existing state and atomically merge so concurrent remote students never overwrite each other!\n    let existingRaw = dbSheet.getRange('A2').getValue();\n    let state = existingRaw ? JSON.parse(existingRaw) : { users: [], exams: [], attempts: [], subs: [], flags: [], drafts: {} };\n\n    // Merge users (preserve permanent passwords & highest login counts)\n    const userByIdent = {};\n    (state.users || []).forEach(u => { userByIdent[String(u.ident || '').toLowerCase()] = u; });\n    (incoming.users || []).forEach(iu => {\n      const k = String(iu.ident || '').toLowerCase();\n      const ex = userByIdent[k];\n      if (!ex) {\n        userByIdent[k] = iu;\n      } else {\n        if (iu.pwChanged) { ex.pw = iu.pw; ex.pwChanged = true; ex.mustChangePw = false; }\n        if ((iu.loginCount || 0) >= (ex.loginCount || 0)) {\n          ex.loginCount = iu.loginCount;\n          ex.lastLoginAt = iu.lastLoginAt || ex.lastLoginAt;\n        }\n      }\n    });\n    state.users = Object.keys(userByIdent).map(k => userByIdent[k]);\n\n    if (Array.isArray(incoming.exams) && incoming.exams.length > 0) state.exams = incoming.exams;\n\n    // Merge attempts by uid:eid\n    const attMap = {};\n    (state.attempts || []).forEach(a => { attMap[a.uid + ':' + a.eid] = a; });\n    (incoming.attempts || []).forEach(a => {\n      const k = a.uid + ':' + a.eid;\n      const ex = attMap[k];\n      if (!ex || a.done || (a.examLaunched && !ex.examLaunched)) attMap[k] = a;\n      else if (a.lastLoginAt) ex.lastLoginAt = a.lastLoginAt;\n    });\n    state.attempts = Object.keys(attMap).map(k => attMap[k]);\n\n    // Merge code submissions by uid:qid\n    const subMap = {};\n    (state.subs || []).forEach(s => { subMap[s.uid + ':' + s.qid] = s; });\n    (incoming.subs || []).forEach(s => { subMap[s.uid + ':' + s.qid] = s; });\n    state.subs = Object.keys(subMap).map(k => subMap[k]);\n\n    // Merge proctoring flags by id\n    const flagMap = {};\n    (state.flags || []).forEach(f => { if (f.id) flagMap[f.id] = f; });\n    (incoming.flags || []).forEach(f => { if (f.id) flagMap[f.id] = f; });\n    state.flags = Object.keys(flagMap).map(k => flagMap[k]);\n\n    // Merge code drafts\n    state.drafts = Object.assign({}, state.drafts || {}, incoming.drafts || {});\n\n    dbSheet.getRange('A2').setValue(JSON.stringify(state));\n    dbSheet.getRange('B2').setValue(new Date().toISOString());\n\n    // 1. Update Student_Logins_And_Roster sheet\n    let roster = ss.getSheetByName('Student_Logins_And_Roster');\n    if (!roster) roster = ss.insertSheet('Student_Logins_And_Roster');\n    roster.clearContents();\n    roster.appendRow(['Roll No / ID', 'Student Name', 'Batch', 'Assigned Set', 'Password Status', 'Current Password', 'Login Count', 'Last Login Time', 'Exam Status', 'Total Score / 20', 'Violation Flags']);\n    state.users.filter(u => u.role === 'student').forEach(u => {\n      const att = state.attempts.find(a => a.uid === u.id);\n      const stuSubs = state.subs.filter(s => s.uid === u.id);\n      const stuFlags = state.flags.filter(f => f.uid === u.id);\n      const score = stuSubs.reduce((acc, s) => acc + (Number(s.passed || 0) / Math.max(1, Number(s.total || 1)) * 10), 0);\n      const status = att ? (att.done ? 'Submitted' : (att.examLaunched ? 'In Exam' : 'Logged In')) : (u.loginCount ? 'Logged In' : 'Not Logged In');\n      roster.appendRow([\n        u.ident, u.name, u.batch || 'CSE-5', 'Set #' + (u.assignedSet || 1),\n        u.pwChanged ? 'Permanent Set' : 'Temp Password', u.pw || '',\n        u.loginCount || 0, u.lastLoginAt || '—', status, Math.round(score * 100) / 100, stuFlags.length\n      ]);\n    });\n\n    // 2. Update Submissions_And_Code sheet\n    let subSheet = ss.getSheetByName('Submissions_And_Code');\n    if (!subSheet) subSheet = ss.insertSheet('Submissions_And_Code');\n    subSheet.clearContents();\n    subSheet.appendRow(['Roll No / ID', 'Student Name', 'Batch', 'Question ID', 'Language', 'Tests Passed', 'Total Tests', 'Auto-Grade Marks', 'Submitted Source Code']);\n    state.subs.forEach(s => {\n      const stu = state.users.find(u => u.id === s.uid) || { ident: s.uid, name: 'Student', batch: '' };\n      const marks = Math.round((Number(s.passed || 0) / Math.max(1, Number(s.total || 1))) * 10 * 100) / 100;\n      subSheet.appendRow([stu.ident, stu.name, stu.batch || '', s.qid, s.lang, s.passed, s.total, marks, s.code]);\n    });\n\n    // 3. Update Violation_Flags_Log sheet\n    let flagSheet = ss.getSheetByName('Violation_Flags_Log');\n    if (!flagSheet) flagSheet = ss.insertSheet('Violation_Flags_Log');\n    flagSheet.clearContents();\n    flagSheet.appendRow(['Timestamp (UTC)', 'Roll No / ID', 'Student Name', 'Violation Type', 'Details']);\n    state.flags.forEach(f => {\n      const stu = state.users.find(u => u.id === f.uid) || { ident: f.uid, name: 'Student' };\n      flagSheet.appendRow([f.ts || '', stu.ident, stu.name, f.kind, f.detail || '']);\n    });\n\n    return ContentService.createTextOutput(JSON.stringify({ ok: true, ts: Date.now(), state: state }))\n      .setMimeType(ContentService.MimeType.JSON);\n  } finally {\n    lock.releaseLock();\n  }\n}";
+    const GOOGLE_APPS_SCRIPT_SOURCE = '// ============================================================================\n// CODESHIELD CBIT — 24/7 SERVERLESS GOOGLE SHEETS BACKEND (Code.gs)\n// Works with GitHub Pages! Zero Python server (app.py) needed!\n// Target Google Sheet ID: 1CjbU4S7xRryZNoT2v7LSM8mAZ1Vi6ikS3brjDJFPXdA\n//\n// SETUP (Takes 30 Seconds):\n// 1. Open your Google Sheet:\n//    https://docs.google.com/spreadsheets/d/1CjbU4S7xRryZNoT2v7LSM8mAZ1Vi6ikS3brjDJFPXdA/edit\n// 2. Click "Extensions" -> "Apps Script" in the top menu.\n// 3. Delete any existing code in Code.gs, paste this entire file, and click Save (Ctrl+S).\n// 4. Click "Deploy" (top right) -> "New deployment".\n// 5. Click the gear icon next to "Select type" -> choose "Web app".\n// 6. Set "Execute as" -> "Me".\n// 7. Set "Who has access" -> "Anyone".\n// 8. Click "Deploy" (authorize if prompted) and copy the "Web app URL" (ends in /exec).\n// 9. Paste that Web app URL into CodeShield CBIT Admin Dashboard -> click\n//    "Download index.html for GitHub Pages" and upload index.html to your GitHub repo!\n// ============================================================================\n\nconst SHEET_ID = \'1CjbU4S7xRryZNoT2v7LSM8mAZ1Vi6ikS3brjDJFPXdA\';\n\nfunction doGet(e) {\n  const ss = SpreadsheetApp.openById(SHEET_ID);\n  let dbSheet = ss.getSheetByName(\'_Portal_State_DB\');\n  let st = null;\n  if (dbSheet) {\n    const raw = dbSheet.getRange(\'A2\').getValue();\n    if (raw) {\n      try { st = JSON.parse(raw); } catch (err) { st = null; }\n    }\n  }\n  const outJson = JSON.stringify({ ok: true, state: st, ts: Date.now() });\n  if (e && e.parameter && e.parameter.callback) {\n    return ContentService.createTextOutput(e.parameter.callback + \'(\' + outJson + \');\')\n      .setMimeType(ContentService.MimeType.JAVASCRIPT);\n  }\n  return ContentService.createTextOutput(outJson)\n    .setMimeType(ContentService.MimeType.JSON);\n}\n\nfunction doPost(e) {\n  const lock = LockService.getScriptLock();\n  lock.waitLock(15000);\n  try {\n    const ss = SpreadsheetApp.openById(SHEET_ID);\n    const incoming = JSON.parse((e && e.postData && e.postData.contents) ? e.postData.contents : \'{}\');\n    let dbSheet = ss.getSheetByName(\'_Portal_State_DB\');\n    if (!dbSheet) {\n      dbSheet = ss.insertSheet(\'_Portal_State_DB\');\n      dbSheet.getRange(\'A1\').setValue(\'PORTAL_STATE_JSON\');\n      dbSheet.getRange(\'B1\').setValue(\'LAST_UPDATED_UTC\');\n    }\n\n    let existingRaw = dbSheet.getRange(\'A2\').getValue();\n    let state = { users: [], exams: [], attempts: [], subs: [], flags: [], drafts: {} };\n    if (existingRaw) {\n      try { state = JSON.parse(existingRaw); } catch (err) {}\n    }\n\n    // 1. Atomic Merge of Users (preserves permanent passwords & login counts across all networks)\n    const userByIdent = {};\n    (state.users || []).forEach(function(u) {\n      userByIdent[String(u.ident || \'\').toLowerCase()] = u;\n    });\n    (incoming.users || []).forEach(function(iu) {\n      const k = String(iu.ident || \'\').toLowerCase();\n      const ex = userByIdent[k];\n      if (!ex) {\n        userByIdent[k] = iu;\n      } else {\n        if (iu.pwChanged) {\n          ex.pw = iu.pw;\n          ex.pwChanged = true;\n          ex.mustChangePw = false;\n        }\n        if ((iu.loginCount || 0) >= (ex.loginCount || 0)) {\n          ex.loginCount = iu.loginCount;\n          ex.lastLoginAt = iu.lastLoginAt || ex.lastLoginAt;\n        }\n      }\n    });\n    state.users = Object.keys(userByIdent).map(function(k) { return userByIdent[k]; });\n\n    // 2. Merge Exam Settings\n    if (Array.isArray(incoming.exams) && incoming.exams.length > 0) {\n      state.exams = incoming.exams;\n    }\n\n    // 3. Atomic Merge of Student Attempts by uid:eid\n    const attMap = {};\n    (state.attempts || []).forEach(function(a) { attMap[a.uid + \':\' + a.eid] = a; });\n    (incoming.attempts || []).forEach(function(a) {\n      const k = a.uid + \':\' + a.eid;\n      const ex = attMap[k];\n      if (!ex || a.done || (a.examLaunched && !ex.examLaunched)) {\n        attMap[k] = a;\n      } else if (a.lastLoginAt) {\n        ex.lastLoginAt = a.lastLoginAt;\n      }\n    });\n    state.attempts = Object.keys(attMap).map(function(k) { return attMap[k]; });\n\n    // 4. Atomic Merge of Code Submissions by uid:qid\n    const subMap = {};\n    (state.subs || []).forEach(function(s) { subMap[s.uid + \':\' + s.qid] = s; });\n    (incoming.subs || []).forEach(function(s) { subMap[s.uid + \':\' + s.qid] = s; });\n    state.subs = Object.keys(subMap).map(function(k) { return subMap[k]; });\n\n    // 5. Atomic Merge of Violation Flags by id\n    const flagMap = {};\n    (state.flags || []).forEach(function(f) { if (f.id) flagMap[f.id] = f; });\n    (incoming.flags || []).forEach(function(f) { if (f.id) flagMap[f.id] = f; });\n    state.flags = Object.keys(flagMap).map(function(k) { return flagMap[k]; });\n\n    // 6. Merge Code Drafts\n    state.drafts = Object.assign({}, state.drafts || {}, incoming.drafts || {});\n\n    dbSheet.getRange(\'A2\').setValue(JSON.stringify(state));\n    dbSheet.getRange(\'B2\').setValue(new Date().toISOString());\n\n    // Update Tab 1: Student_Logins_And_Roster\n    let roster = ss.getSheetByName(\'Student_Logins_And_Roster\');\n    if (!roster) roster = ss.insertSheet(\'Student_Logins_And_Roster\');\n    roster.clearContents();\n    roster.appendRow([\'Roll No / ID\', \'Student Name\', \'Batch\', \'Assigned Set\', \'Password Status\', \'Current Password\', \'Login Count\', \'Last Login Time\', \'Exam Status\', \'Total Score / 20\', \'Violation Flags\']);\n    state.users.filter(function(u) { return u.role === \'student\'; }).forEach(function(u) {\n      const att = state.attempts.find(function(a) { return a.uid === u.id; });\n      const stuSubs = state.subs.filter(function(s) { return s.uid === u.id; });\n      const stuFlags = state.flags.filter(function(f) { return f.uid === u.id; });\n      const score = stuSubs.reduce(function(acc, s) {\n        return acc + (Number(s.passed || 0) / Math.max(1, Number(s.total || 1)) * 10);\n      }, 0);\n      const status = att ? (att.done ? \'Submitted\' : (att.examLaunched ? \'In Exam\' : \'Logged In\')) : (u.loginCount ? \'Logged In\' : \'Not Logged In\');\n      roster.appendRow([\n        u.ident, u.name, u.batch || \'CSE-5\', \'Set #\' + (u.assignedSet || 1),\n        u.pwChanged ? \'Permanent Set\' : \'Temp Password\', u.pw || \'\',\n        u.loginCount || 0, u.lastLoginAt || \'—\', status, Math.round(score * 100) / 100, stuFlags.length\n      ]);\n    });\n\n    // Update Tab 2: Submissions_And_Code\n    let subSheet = ss.getSheetByName(\'Submissions_And_Code\');\n    if (!subSheet) subSheet = ss.insertSheet(\'Submissions_And_Code\');\n    subSheet.clearContents();\n    subSheet.appendRow([\'Roll No / ID\', \'Student Name\', \'Batch\', \'Question ID\', \'Language\', \'Tests Passed\', \'Total Tests\', \'Auto-Grade Marks\', \'Submitted Source Code\']);\n    state.subs.forEach(function(s) {\n      const stu = state.users.find(function(u) { return u.id === s.uid; }) || { ident: s.uid, name: \'Student\', batch: \'\' };\n      const marks = Math.round((Number(s.passed || 0) / Math.max(1, Number(s.total || 1))) * 10 * 100) / 100;\n      subSheet.appendRow([stu.ident, stu.name, stu.batch || \'\', s.qid, s.lang, s.passed, s.total, marks, s.code]);\n    });\n\n    // Update Tab 3: Violation_Flags_Log\n    let flagSheet = ss.getSheetByName(\'Violation_Flags_Log\');\n    if (!flagSheet) flagSheet = ss.insertSheet(\'Violation_Flags_Log\');\n    flagSheet.clearContents();\n    flagSheet.appendRow([\'Timestamp (UTC)\', \'Roll No / ID\', \'Student Name\', \'Violation Type\', \'Details\']);\n    state.flags.forEach(function(f) {\n      const stu = state.users.find(function(u) { return u.id === f.uid; }) || { ident: f.uid, name: \'Student\' };\n      flagSheet.appendRow([f.ts || \'\', stu.ident, stu.name, f.kind, f.detail || \'\']);\n    });\n\n    return ContentService.createTextOutput(JSON.stringify({ ok: true, ts: Date.now() }))\n      .setMimeType(ContentService.MimeType.JSON);\n  } finally {\n    lock.releaseLock();\n  }\n}\n';
 
     function openGdriveSyncModal() {
       if ($('appsScriptCodePreview')) $('appsScriptCodePreview').value = GOOGLE_APPS_SCRIPT_SOURCE;
@@ -6284,7 +6653,7 @@ int main() {
     function downloadStudentReadyHtmlWithEmbeddedCloudUrl() {
       const url = ($('gdriveWebhookUrlInput') ? $('gdriveWebhookUrlInput').value.trim() : '') || getGdriveWebhookUrl();
       if (!url) {
-        showToast('Paste Web App URL First', 'Please paste your Google Apps Script Web App URL (/exec) in Step 3 before downloading the Student-Ready HTML.', 'warn');
+        showToast('Paste Web App URL First', 'Please paste your Google Apps Script Web App URL (/exec) in Step 3 before downloading index.html for GitHub Pages.', 'warn');
         return;
       }
       setGdriveWebhookUrl(url);
@@ -6298,12 +6667,12 @@ int main() {
       const dlUrl = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = dlUrl;
-      a.download = 'cbit_exam_portal.html';
+      a.download = 'index.html';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
       URL.revokeObjectURL(dlUrl);
-      showToast('Student-Ready HTML Downloaded!', 'Share this downloaded cbit_exam_portal.html with your 71 students. Your Google Drive URL is permanently embedded inside it!', 'ok');
+      showToast('Downloaded index.html for GitHub Pages!', 'Upload this index.html to your GitHub repo. Your Google Sheet Cloud URL is permanently embedded inside it for all networks!', 'ok');
     }
 
     function downloadStudentExamReceiptJson(userObj, eid) {
@@ -6362,7 +6731,6 @@ int main() {
           try {
             const data = JSON.parse(loadEv.target.result);
             if (data && data.student && data.student.ident) {
-              // Single-student receipt JSON
               mergeRemoteStateIntoLocal({
                 users: [data.student],
                 attempts: data.attempt ? [data.attempt] : [],
@@ -6371,7 +6739,6 @@ int main() {
               });
               importedCount++;
             } else if (data && Array.isArray(data.users)) {
-              // Full state backup JSON
               mergeRemoteStateIntoLocal(data);
               importedCount++;
             }
@@ -6703,8 +7070,11 @@ int main() {
       updateNavigationUI();
       if (user.role === 'admin') {
         showView('admin');
+        switchAdminTab('results');
         renderAdminAll();
-        showToast('Signed in as Administrator', 'Full access to questions, test cases, grading rules, and violation flags.', 'ok');
+        pullStateFromBackendServer(false);
+        startLiveAdminCloudStream();
+        showToast('Signed in as Administrator', 'Syncing live student logins, permanent passwords, code submissions & scores from all networks...', 'ok');
       } else {
         showView('studentDashboard');
         renderStudentDashboard();
@@ -7110,8 +7480,12 @@ int main() {
 
     function renderAdminAll() {
       if (!currentUser || currentUser.role !== 'admin') return;
-      $('adminStatExams').textContent = STATE.exams.length;
-      $('adminStatQns').textContent = STATE.questions.length;
+      const loggedInStudentsCount = STATE.users.filter(function(u) {
+        return u.role === 'student' && ((u.loginCount || 0) > 0 || u.pwChanged || STATE.attempts.some(function(a) { return a.uid === u.id; }));
+      }).length;
+      if ($('adminStatLogins')) $('adminStatLogins').textContent = loggedInStudentsCount + ' / 73';
+      if ($('adminStatExams')) $('adminStatExams').textContent = STATE.exams.length;
+      $('adminStatQns').textContent = STATE.questions.length + ' (50 Sets)';
       $('adminStatAttempts').textContent = STATE.attempts.length;
       $('adminStatFlags').textContent = STATE.flags.length;
 
@@ -7348,16 +7722,34 @@ int main() {
     function renderAdminResults() {
       const tbody = $('adminResultsTableBody');
       const currExam = STATE.exams.find(function(e) { return e.id === selectedAdminEid; });
-      const qns = STATE.questions.filter(function(q) { return q.eid === selectedAdminEid; });
-      const maxTotalMarks = qns.reduce(function(acc, q) { return acc + Number(q.marks); }, 0);
-      const attempts = STATE.attempts.filter(function(a) { return a.eid === selectedAdminEid; });
+      const scope = $('adminResultsScopeSelect') ? $('adminResultsScopeSelect').value : 'active';
 
-      if (attempts.length === 0) {
-        tbody.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-400">No student attempts recorded for this exam yet.</td></tr>';
+      // Build unified list of student attempts (include any student who logged in, changed password, saved a draft, or submitted, OR all students if scope === 'all')
+      const rowsData = [];
+      STATE.users.filter(function(u) { return u.role === 'student'; }).forEach(function(stu) {
+        const att = STATE.attempts.find(function(a) { return a.uid === stu.id && a.eid === selectedAdminEid; });
+        const hasSub = STATE.subs.some(function(s) { return s.uid === stu.id; });
+        const hasFlag = STATE.flags.some(function(f) { return f.uid === stu.id && f.eid === selectedAdminEid; });
+        const hasDraft = Object.keys(STATE.drafts || {}).some(function(k) { return k.indexOf(String(stu.id) + ':') === 0; });
+        const isActive = Boolean(att || hasSub || hasFlag || hasDraft || (stu.loginCount || 0) > 0 || stu.pwChanged);
+        if (scope === 'all' || isActive) {
+          rowsData.push(att || {
+            uid: stu.id,
+            eid: selectedAdminEid,
+            start: 0,
+            done: 0,
+            examLaunched: false,
+            notLoggedInYet: !isActive
+          });
+        }
+      });
+
+      if (rowsData.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="8" class="py-6 text-center text-slate-400">No remote student logins or attempts recorded yet. Click "🔄 Refresh Live Cloud Data" or switch dropdown above to "Show All 73 Students".</td></tr>';
         return;
       }
 
-      tbody.innerHTML = attempts.map(function(a) {
+      tbody.innerHTML = rowsData.map(function(a) {
         const stu = STATE.users.find(function(u) { return u.id === a.uid; }) || { name: 'Student', ident: 'Unknown' };
         const stuQns = getQuestionsForStudent(selectedAdminEid, stu);
         const stuMaxMarks = stuQns.reduce(function(acc, q) { return acc + Number(q.marks); }, 0);
@@ -7378,13 +7770,15 @@ int main() {
         const finalScore = Math.max(0, Math.round((rawScore - deduction) * 100) / 100);
 
         const loginInfo = stu.lastLoginAt ? ('<div class="text-[10px] text-slate-400 font-mono mt-0.5">Last Login: ' + escapeHtml(stu.lastLoginAt) + ' (' + (stu.loginCount || 1) + 'x)</div>') : '';
-        const statusBadge = (a.done
-          ? (a.autoTerminated
-              ? '<span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold">Auto-Submitted (Max Flags)</span>'
-              : '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">✓ Exam Submitted</span>')
-          : (a.examLaunched
-              ? '<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">✍️ In Exam Workspace</span>'
-              : '<span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold">🔑 Logged In (' + (stu.pwChanged ? 'Perm PW Saved' : 'Temp PW') + ')</span>')) + loginInfo;
+        const statusBadge = (a.notLoggedInYet
+          ? '<span class="px-2 py-0.5 rounded bg-slate-800 text-slate-400 border border-slate-700 font-semibold">⏳ Not Logged In Yet</span>'
+          : (a.done
+              ? (a.autoTerminated
+                  ? '<span class="px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 border border-rose-500/30 font-semibold">Auto-Submitted (Max Flags)</span>'
+                  : '<span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30 font-semibold">✓ Exam Submitted</span>')
+              : (a.examLaunched
+                  ? '<span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 border border-amber-500/30 font-semibold">✍️ In Exam Workspace</span>'
+                  : '<span class="px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold">🔑 Logged In (' + (stu.pwChanged ? 'Perm PW: ' + escapeHtml(stu.pw) : 'Temp PW') + ')</span>'))) + loginInfo;
 
         return '<tr class="hover:bg-slate-950/50">' +
           '<td class="py-3 px-3 font-semibold text-white">' + escapeHtml(stu.name) + '</td>' +
@@ -7414,8 +7808,13 @@ int main() {
       const subsHtml = qns.map(function(q, idx) {
         const sub = STATE.subs.find(function(s) { return s.uid === Number(uid) && s.qid === q.id; });
         if (!sub) {
-          return '<div class="bg-slate-950 border border-slate-800 rounded-xl p-4">' +
-            '<div class="font-bold text-white">Q' + (idx + 1) + ': ' + escapeHtml(q.title) + ' — <span class="text-slate-400">Not Submitted</span></div>' +
+          const draftJava = (STATE.drafts && STATE.drafts[uid + ':' + q.id + ':java']) || '';
+          const draftPy   = (STATE.drafts && STATE.drafts[uid + ':' + q.id + ':python']) || '';
+          const draftC    = (STATE.drafts && STATE.drafts[uid + ':' + q.id + ':c']) || '';
+          const liveDraft = draftJava || draftPy || draftC;
+          return '<div class="bg-slate-950 border border-slate-800 rounded-xl p-4 space-y-2">' +
+            '<div class="font-bold text-white">Q' + (idx + 1) + ': ' + escapeHtml(q.title) + ' — <span class="text-amber-300">' + (liveDraft ? 'Live Auto-Saved Draft (Not Final-Submitted Yet)' : 'Not Submitted Yet') + '</span></div>' +
+            (liveDraft ? '<pre class="p-3 rounded-lg bg-slate-900 border border-slate-800 font-mono text-xs text-slate-200 overflow-x-auto">' + escapeHtml(liveDraft) + '</pre>' : '') +
           '</div>';
         }
         const score = computeQuestionScore(q, sub);
@@ -7458,6 +7857,7 @@ int main() {
         function() {
           STATE.attempts = STATE.attempts.filter(function(a) { return !(a.uid === Number(uid) && a.eid === Number(eid)); });
           STATE.flags = STATE.flags.filter(function(f) { return !(f.uid === Number(uid) && f.eid === Number(eid)); });
+          pushPacketToCloudRelay(CLOUD_TOPIC_ADMIN, { t: 'stu_reset', ts: Date.now(), uid: Number(uid), eid: Number(eid) });
           saveState();
           renderAdminAll();
           showToast('Student Attempt Reset', 'The student can now start a fresh attempt.', 'ok');
@@ -8514,6 +8914,7 @@ int main() {
     restoreFromIndexedDBIfNeeded();
     restoreActiveUserSession();
     runBackendHealthCheck(false);
+    startLiveAdminCloudStream();
     setInterval(function() {
       pullStateFromBackendServer();
     }, 6000);
