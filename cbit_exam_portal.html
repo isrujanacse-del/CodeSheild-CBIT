@@ -891,9 +891,12 @@
               <button id="refreshCloudResultsBtn" type="button" onclick="pullStateFromBackendServer(true)" class="px-3 py-1.5 rounded-lg bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-bold shadow transition" title="Pull latest student logins, code &amp; scores from all networks now">
                 🔄 Refresh Live Cloud Data
               </button>
-              <input id="importStudentJsonInput" type="file" accept=".json" multiple class="hidden" onchange="handleImportStudentJsonFiles(event)" />
-              <button id="importStudentReceiptsBtn" type="button" onclick="document.getElementById('importStudentJsonInput').click()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow transition" title="Import one or more student submission .json receipt files">
-                📥 Import Student Receipts (.json)
+              <input id="importStudentJsonInput" type="file" accept=".txt,.json" multiple class="hidden" onchange="handleImportStudentJsonFiles(event)" />
+              <button id="importStudentReceiptsBtn" type="button" onclick="document.getElementById('importStudentJsonInput').click()" class="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-white text-xs font-bold shadow transition" title="Import one or more student .txt or .json attempt files">
+                📥 Import Student Reports (.txt / .json)
+              </button>
+              <button id="exportAllTxtBtn" type="button" onclick="exportAllStudentsTextReports()" class="px-3 py-1.5 rounded-lg bg-amber-600 hover:bg-amber-500 text-white text-xs font-bold shadow transition" title="Download combined .txt report for all students">
+                📄 Export All Reports (.txt)
               </button>
               <button id="exportMasterCsvBtn" type="button" onclick="exportMasterGradebookCsv()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow transition" title="Download Excel/CSV Gradebook for all 71 students">
                 📊 Export Master Gradebook (.csv)
@@ -1106,6 +1109,9 @@
           <div class="flex items-center gap-2">
             <button id="reqFullscreenAgainBtn" type="button" onclick="restoreExamFullscreen()" class="px-3 py-1.5 rounded-lg text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700">
               Enforce Fullscreen
+            </button>
+            <button id="downloadLiveTxtBtn" type="button" onclick="downloadStudentAttemptTextFile(currentUser, activeExamSession.eid)" class="px-3 py-1.5 rounded-lg text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition" title="Download .txt file with your code, marks, grade &amp; violation flags">
+              📄 Download My Attempt (.txt)
             </button>
             <button id="finishExamBtn" type="button" onclick="confirmFinishExam()" class="px-4 py-1.5 rounded-lg text-xs font-bold bg-rose-600 hover:bg-rose-500 text-white shadow">
               Finish &amp; Submit Exam
@@ -6675,6 +6681,242 @@ int main() {
       showToast('Downloaded index.html for GitHub Pages!', 'Upload this index.html to your GitHub repo. Your Google Sheet Cloud URL is permanently embedded inside it for all networks!', 'ok');
     }
 
+    function computeLetterGradeInfo(finalScore, maxMarks) {
+      const maxM = Math.max(1, Number(maxMarks) || 20);
+      const pct = Math.max(0, Math.min(100, Math.round((Number(finalScore || 0) / maxM) * 10000) / 100));
+      let grade = 'F (Fail)';
+      let status = 'FAIL';
+      if (pct >= 90) { grade = 'S (Outstanding)'; status = 'PASS (Distinction)'; }
+      else if (pct >= 80) { grade = 'A+ (Excellent)'; status = 'PASS (Distinction)'; }
+      else if (pct >= 70) { grade = 'A (Very Good)'; status = 'PASS (First Class)'; }
+      else if (pct >= 60) { grade = 'B+ (Good)'; status = 'PASS (First Class)'; }
+      else if (pct >= 50) { grade = 'B (Above Average)'; status = 'PASS (Second Class)'; }
+      else if (pct >= 40) { grade = 'C (Pass)'; status = 'PASS'; }
+      return { pct: pct, grade: grade, status: status };
+    }
+
+    function generateStudentAttemptTextReport(userObj, eid) {
+      const u = (typeof userObj === 'number' || typeof userObj === 'string')
+        ? STATE.users.find(function(x) { return x.id === Number(userObj) || String(x.ident).toLowerCase() === String(userObj).toLowerCase(); })
+        : (userObj || currentUser);
+      if (!u) return '';
+      const examId = Number(eid || activeExamSession.eid || selectedAdminEid || 1);
+      const exam = STATE.exams.find(function(e) { return e.id === examId; }) || STATE.exams[0] || { id: 1, title: '3rd CSE-5 — Internal Lab Exam-2: Java Programming', minutes: 60, maxFlags: 3, flagPenaltyPct: 0 };
+      const qns = getQuestionsForStudent(examId, u);
+      const stuAttempt = STATE.attempts.find(function(a) { return a.uid === u.id && a.eid === examId; });
+      const stuSubs = STATE.subs.filter(function(s) { return s.uid === u.id; });
+      const stuFlags = STATE.flags.filter(function(f) { return f.uid === u.id && f.eid === examId; });
+
+      const maxMarks = qns.reduce(function(acc, q) { return acc + (Number(q.marks) || 10); }, 0) || 20;
+      let rawScore = 0;
+      const qScores = [];
+      qns.forEach(function(q) {
+        const sub = stuSubs.find(function(s) { return s.qid === q.id; });
+        const sc = computeQuestionScore(q, sub);
+        rawScore += sc;
+        qScores.push({ q: q, sub: sub, sc: sc });
+      });
+      rawScore = Math.round(rawScore * 100) / 100;
+      const penaltyPct = Number(exam.flagPenaltyPct) || 0;
+      const deduction = Math.min(rawScore, Math.round(rawScore * (stuFlags.length * penaltyPct / 100) * 100) / 100);
+      const finalScore = Math.max(0, Math.round((rawScore - deduction) * 100) / 100);
+      const gradeInfo = computeLetterGradeInfo(finalScore, maxMarks);
+      const verHash = hashSecret(u.ident + '::' + finalScore + '::' + stuSubs.length + '::' + stuFlags.length + '::CBIT2026');
+
+      const attemptStatusStr = stuAttempt
+        ? (stuAttempt.done
+            ? (stuAttempt.autoTerminated ? 'AUTO-SUBMITTED BY PROCTOR (MAX FLAGS / TIMER)' : 'COMPLETED & SUBMITTED')
+            : (stuAttempt.examLaunched ? 'IN EXAM WORKSPACE (ACTIVE)' : 'LOGGED IN'))
+        : ((u.loginCount || 0) > 0 ? 'LOGGED IN' : 'NOT STARTED');
+
+      const lines = [];
+      lines.push('================================================================================');
+      lines.push('        CHAITANYA BHARATHI INSTITUTE OF TECHNOLOGY (AUTONOMOUS) — CBIT');
+      lines.push('              Department of Computer Science & Engineering (3rd CSE-5)');
+      lines.push('         OFFICIAL PROCTORED CODING EXAM ATTEMPT, CODE & GRADE REPORT');
+      lines.push('================================================================================');
+      lines.push('Examination       : ' + exam.title);
+      lines.push('Chief Coordinator : Dr. I. Srujana, Assistant Professor, Dept. of CSE, CBIT');
+      lines.push('Report Generated  : ' + formatTimeNow());
+      lines.push('Verification Hash : ' + verHash.toUpperCase());
+      lines.push('--------------------------------------------------------------------------------');
+      lines.push('1. CANDIDATE & ATTEMPT DETAILS');
+      lines.push('--------------------------------------------------------------------------------');
+      lines.push('Student Full Name : ' + (u.name || 'N/A'));
+      lines.push('CBIT Roll Number  : ' + (u.ident || 'N/A'));
+      lines.push('Official Email    : ' + (u.email || (u.ident + '@cbit.ac.in')));
+      lines.push('Branch & Semester : ' + (u.branch || 'CSE-5') + ' (' + (u.sem || 'III Sem') + ')');
+      lines.push('Assigned Batch    : ' + (u.batch || 'CSE-5'));
+      lines.push('Question Set No.  : Set #' + String(u.assignedSet || 1).padStart(2, '0'));
+      lines.push('Password Status   : ' + (u.pwChanged ? 'Permanent Password Active' : 'Temporary Batch Password'));
+      lines.push('Total Logins      : ' + (u.loginCount || 1) + ' (Last Login: ' + (u.lastLoginAt || formatTimeNow()) + ')');
+      lines.push('Attempt Status    : ' + attemptStatusStr);
+      lines.push('');
+      lines.push('================================================================================');
+      lines.push('2. MARKS, PERCENTAGE & FINAL GRADE SUMMARY');
+      lines.push('================================================================================');
+      qScores.forEach(function(item, idx) {
+        const partLabel = item.q.part ? ('Part ' + item.q.part) : ('Question ' + (idx + 1));
+        const passInfo = item.sub ? (item.sub.passed + '/' + item.sub.total + ' Test Cases Passed') : 'Not Final-Submitted';
+        lines.push('  ' + partLabel + ' (' + (item.q.topic || 'Coding') + ') : ' + item.sc + ' / ' + item.q.marks + ' Marks  [' + passInfo + ']');
+      });
+      lines.push('--------------------------------------------------------------------------------');
+      lines.push('  Raw Total Score        : ' + rawScore + ' / ' + maxMarks + ' Marks');
+      lines.push('  Violation Flags Count  : ' + stuFlags.length + ' / ' + (exam.maxFlags || 3) + ' Flags');
+      if (deduction > 0) {
+        lines.push('  Flag Penalty Deduction : -' + deduction + ' Marks (' + penaltyPct + '% per flag)');
+      }
+      lines.push('  FINAL AWARDED MARKS    : ' + finalScore + ' / ' + maxMarks + ' Marks');
+      lines.push('  PERCENTAGE             : ' + gradeInfo.pct + '%');
+      lines.push('  FINAL LETTER GRADE     : ' + gradeInfo.grade);
+      lines.push('  RESULT STATUS          : ' + gradeInfo.status);
+      lines.push('================================================================================');
+      lines.push('');
+      lines.push('================================================================================');
+      lines.push('3. SUBMITTED SOURCE CODE & QUESTION-WISE EVALUATION');
+      lines.push('================================================================================');
+
+      qScores.forEach(function(item, idx) {
+        const q = item.q;
+        const sub = item.sub;
+        const draftJava = (STATE.drafts && STATE.drafts[u.id + ':' + q.id + ':java']) || (activeExamSession.drafts && activeExamSession.drafts[u.id + ':' + q.id + ':java']) || '';
+        const draftPy   = (STATE.drafts && STATE.drafts[u.id + ':' + q.id + ':python']) || (activeExamSession.drafts && activeExamSession.drafts[u.id + ':' + q.id + ':python']) || '';
+        const draftC    = (STATE.drafts && STATE.drafts[u.id + ':' + q.id + ':c']) || (activeExamSession.drafts && activeExamSession.drafts[u.id + ':' + q.id + ':c']) || '';
+        const liveDraft = draftJava || draftPy || draftC;
+
+        lines.push('--------------------------------------------------------------------------------');
+        lines.push('QUESTION ' + (idx + 1) + ' (PART ' + (q.part || (idx === 0 ? 'A' : 'B')) + ') — ' + q.marks + ' MARKS');
+        lines.push('Title          : ' + q.title);
+        lines.push('Syllabus Topic : ' + (q.topic || 'Java Programming'));
+        lines.push('Grading Mode   : ' + formatGradingModeLabel(q.mode));
+        lines.push('Marks Awarded  : ' + item.sc + ' / ' + q.marks);
+        lines.push('--------------------------------------------------------------------------------');
+        lines.push('Problem Statement:');
+        lines.push(q.body);
+        lines.push('');
+        if (sub) {
+          lines.push('Submission Status : SUBMITTED & AUTO-GRADED');
+          lines.push('Programming Lang  : ' + String(sub.lang || 'java').toUpperCase());
+          lines.push('Test Cases Passed : ' + sub.passed + ' / ' + sub.total + ' Total (' +
+                     (sub.samplePassed != null ? (sub.samplePassed + '/' + sub.sampleTotal + ' Sample, ' + sub.hiddenPassed + '/' + sub.hiddenTotal + ' Hidden') : 'All Suites') + ')');
+          lines.push('');
+          lines.push('--- BEGIN SUBMITTED SOURCE CODE (Q' + (idx + 1) + ' - ' + String(sub.lang || 'java').toUpperCase() + ') ---');
+          lines.push(sub.code || '// (Empty submission)');
+          lines.push('--- END SUBMITTED SOURCE CODE (Q' + (idx + 1) + ') ---');
+        } else if (liveDraft) {
+          lines.push('Submission Status : LIVE AUTO-SAVED DRAFT (Not Final-Submitted)');
+          lines.push('');
+          lines.push('--- BEGIN AUTO-SAVED DRAFT CODE (Q' + (idx + 1) + ') ---');
+          lines.push(liveDraft);
+          lines.push('--- END AUTO-SAVED DRAFT CODE (Q' + (idx + 1) + ') ---');
+        } else {
+          lines.push('Submission Status : NO CODE SUBMITTED FOR THIS QUESTION');
+        }
+        lines.push('');
+      });
+
+      lines.push('================================================================================');
+      lines.push('4. PROCTORING & ANTI-CHEAT VIOLATION FLAGS LOG (CHAITANYALOCK v3.0)');
+      lines.push('================================================================================');
+      lines.push('Total Violation Flags Recorded : ' + stuFlags.length + ' / ' + (exam.maxFlags || 3));
+      if (stuFlags.length === 0) {
+        lines.push('Status : CLEAN ATTEMPT — Zero proctoring violations recorded during the exam.');
+      } else {
+        lines.push('--------------------------------------------------------------------------------');
+        lines.push('Flag # | Timestamp (UTC)         | Violation Type            | Details');
+        lines.push('--------------------------------------------------------------------------------');
+        stuFlags.forEach(function(f, fIdx) {
+          const numStr = String(fIdx + 1).padEnd(6, ' ');
+          const tsStr = String(f.ts || 'N/A').padEnd(23, ' ');
+          const kindStr = String(f.kind || 'VIOLATION').toUpperCase().padEnd(25, ' ');
+          lines.push(numStr + ' | ' + tsStr + ' | ' + kindStr + ' | ' + (f.detail || 'Blocked & flagged'));
+        });
+      }
+      lines.push('================================================================================');
+      lines.push('FINAL SUMMARY : ' + u.ident + ' | ' + u.name + ' | MARKS: ' + finalScore + '/' + maxMarks + ' (' + gradeInfo.pct + '%) | GRADE: ' + gradeInfo.grade + ' | FLAGS: ' + stuFlags.length);
+      lines.push('================================================================================');
+
+      // Append machine-readable verification block so Admin can also import .txt files directly!
+      const embeddedReceipt = {
+        portal: 'CodeShield CBIT — 3rd CSE-5 Internal Lab Exam-2',
+        submittedAt: formatTimeNow(),
+        student: {
+          id: u.id,
+          ident: u.ident,
+          name: u.name,
+          batch: u.batch || 'CSE-5',
+          assignedSet: u.assignedSet || 1,
+          pw: u.pw,
+          pwChanged: Boolean(u.pwChanged),
+          loginCount: u.loginCount || 1,
+          lastLoginAt: u.lastLoginAt || formatTimeNow()
+        },
+        attempt: stuAttempt || { uid: u.id, eid: examId, start: Date.now(), done: 1, examLaunched: true },
+        subs: stuSubs,
+        flags: stuFlags,
+        totalScore: finalScore,
+        letterGrade: gradeInfo.grade,
+        verificationHash: verHash
+      };
+      lines.push('');
+      lines.push('===BEGIN_CBIT_VERIFIED_JSON===');
+      lines.push(JSON.stringify(embeddedReceipt));
+      lines.push('===END_CBIT_VERIFIED_JSON===');
+
+      return lines.join('\n');
+    }
+
+    function downloadStudentAttemptTextFile(uidOrUser, eid) {
+      try {
+        const u = (typeof uidOrUser === 'number' || typeof uidOrUser === 'string')
+          ? STATE.users.find(function(x) { return x.id === Number(uidOrUser) || String(x.ident).toLowerCase() === String(uidOrUser).toLowerCase(); })
+          : (uidOrUser || currentUser);
+        if (!u) {
+          showToast('Student Not Found', 'Could not locate student record for text report.', 'error');
+          return;
+        }
+        const reportText = generateStudentAttemptTextReport(u, eid);
+        const blob = new Blob([reportText], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = u.ident + '_' + String(u.name || 'Student').replace(/\s+/g, '_') + '_CBIT_Exam2_Report.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('📄 Attempt Report Downloaded (.txt)', 'Saved ' + u.ident + ' full code, marks, grade & violation flags report.', 'ok');
+      } catch (e) {
+        showToast('Download Error', 'Could not generate text report.', 'error');
+      }
+    }
+
+    function exportAllStudentsTextReports() {
+      try {
+        const activeStudents = STATE.users.filter(function(stu) {
+          if (stu.role !== 'student') return false;
+          const hasAtt = STATE.attempts.some(function(a) { return a.uid === stu.id && a.eid === selectedAdminEid; });
+          const hasSub = STATE.subs.some(function(s) { return s.uid === stu.id; });
+          const hasFlag = STATE.flags.some(function(f) { return f.uid === stu.id && f.eid === selectedAdminEid; });
+          return hasAtt || hasSub || hasFlag || (stu.loginCount || 0) > 0 || stu.pwChanged;
+        });
+        const listToExport = activeStudents.length > 0 ? activeStudents : STATE.users.filter(function(u) { return u.role === 'student'; });
+        const combined = listToExport.map(function(stu) {
+          return generateStudentAttemptTextReport(stu, selectedAdminEid);
+        }).join('\n\n\n');
+        const blob = new Blob([combined], { type: 'text/plain;charset=utf-8' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = 'CBIT_3rd_CSE5_All_Student_Attempt_Reports_' + new Date().toISOString().slice(0, 10) + '.txt';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+        showToast('📄 Exported All Student Reports (.txt)', 'Downloaded combined text report with code, marks, grades & flags for ' + listToExport.length + ' students.', 'ok');
+      } catch (e) {}
+    }
+
     function downloadStudentExamReceiptJson(userObj, eid) {
       try {
         const u = userObj || currentUser;
@@ -6729,7 +6971,11 @@ int main() {
         const reader = new FileReader();
         reader.onload = function(loadEv) {
           try {
-            const data = JSON.parse(loadEv.target.result);
+            let rawText = String(loadEv.target.result || '');
+            if (rawText.indexOf('===BEGIN_CBIT_VERIFIED_JSON===') !== -1) {
+              rawText = rawText.split('===BEGIN_CBIT_VERIFIED_JSON===')[1].split('===END_CBIT_VERIFIED_JSON===')[0].trim();
+            }
+            const data = JSON.parse(rawText);
             if (data && data.student && data.student.ident) {
               mergeRemoteStateIntoLocal({
                 users: [data.student],
@@ -7787,11 +8033,13 @@ int main() {
           '<td class="py-3 px-3">' + (breakdownPills || '—') + '</td>' +
           '<td class="py-3 px-3 font-mono font-bold text-slate-200">' + rawScore + ' / ' + stuMaxMarks + '</td>' +
           '<td class="py-3 px-3 font-mono font-bold ' + (stuFlags.length > 0 ? 'text-rose-400' : 'text-emerald-400') + '">' + stuFlags.length + ' flags</td>' +
-          '<td class="py-3 px-3 font-mono font-extrabold text-sm text-emerald-400">' + finalScore + ' / ' + stuMaxMarks +
-            (deduction > 0 ? ' <span class="text-[10px] text-rose-400">(-' + deduction + ')</span>' : '') + '</td>' +
-          '<td class="py-3 px-3 text-right space-x-1.5">' +
+          '<td class="py-3 px-3 font-mono"><div class="font-extrabold text-sm text-emerald-400">' + finalScore + ' / ' + stuMaxMarks +
+            (deduction > 0 ? ' <span class="text-[10px] text-rose-400">(-' + deduction + ')</span>' : '') +
+            '</div><div class="text-[10px] font-sans font-bold text-amber-300">Grade: ' + computeLetterGradeInfo(finalScore, stuMaxMarks).grade + '</div></td>' +
+          '<td class="py-3 px-3 text-right space-x-1">' +
+            '<button type="button" onclick="downloadStudentAttemptTextFile(' + a.uid + ',' + a.eid + ')" class="px-2.5 py-1 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-bold shadow transition" title="Download .txt file with student code, marks, grade &amp; violation flags">📄 Download .txt</button>' +
             '<button type="button" onclick="inspectStudentAttempt(' + a.uid + ',' + a.eid + ')" class="px-2.5 py-1 rounded-lg bg-indigo-600/20 hover:bg-indigo-600/40 text-indigo-300 border border-indigo-500/30 font-semibold">Inspect Code &amp; Flags</button>' +
-            '<button type="button" onclick="resetStudentAttempt(' + a.uid + ',' + a.eid + ')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Reset Attempt</button>' +
+            '<button type="button" onclick="resetStudentAttempt(' + a.uid + ',' + a.eid + ')" class="px-2.5 py-1 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">Reset</button>' +
           '</td>' +
         '</tr>';
       }).join('');
@@ -7836,7 +8084,25 @@ int main() {
             '</div>';
           }).join('') + '</div>';
 
+      let totalMarksEarned = 0;
+      const maxMarksPossible = qns.reduce(function(acc, q) { return acc + (Number(q.marks) || 10); }, 0) || 20;
+      qns.forEach(function(q) {
+        const sub = STATE.subs.find(function(s) { return s.uid === Number(uid) && s.qid === q.id; });
+        totalMarksEarned += computeQuestionScore(q, sub);
+      });
+      totalMarksEarned = Math.round(totalMarksEarned * 100) / 100;
+      const gInfo = computeLetterGradeInfo(totalMarksEarned, maxMarksPossible);
+
       $('inspectModalBody').innerHTML =
+        '<div class="bg-slate-950 border border-indigo-500/40 rounded-xl p-4 flex flex-wrap items-center justify-between gap-3">' +
+          '<div class="space-y-0.5">' +
+            '<div class="text-sm font-extrabold text-white">Marks: <span class="text-emerald-400 font-mono">' + totalMarksEarned + ' / ' + maxMarksPossible + '</span> (' + gInfo.pct + '%) · Grade: <span class="text-amber-300">' + gInfo.grade + '</span></div>' +
+            '<div class="text-xs text-slate-400">Violation Flags: <strong class="text-rose-400 font-mono">' + flags.length + '</strong> · Status: <strong class="text-slate-200">' + gInfo.status + '</strong></div>' +
+          '</div>' +
+          '<button type="button" onclick="downloadStudentAttemptTextFile(' + Number(uid) + ',' + Number(eid) + ')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold shadow-lg transition">' +
+            '📄 Download Full Attempt Report (.txt)' +
+          '</button>' +
+        '</div>' +
         '<div><h4 class="text-xs font-bold uppercase tracking-wider text-slate-400 mb-2">Submitted Code &amp; Per-Question Auto-Grading</h4><div class="space-y-3">' + subsHtml + '</div></div>' +
         '<div><h4 class="text-xs font-bold uppercase tracking-wider text-rose-400 mb-2">Recorded Proctoring Violation Flags</h4>' + flagsHtml + '</div>';
 
@@ -7994,7 +8260,7 @@ int main() {
           '</div>' +
           '<div class="flex items-center gap-2">' +
             (isDone
-              ? '<div class="w-full space-y-2"><div class="w-full py-2 px-4 rounded-xl text-xs font-bold bg-emerald-950/40 text-emerald-300 border border-emerald-500/30 text-center">✓ Exam Completed &amp; Saved (Score: ' + myScore + ' / ' + totalMarks + ')</div><button type="button" onclick="downloadStudentExamReceiptJson(currentUser, ' + e.id + ')" class="w-full py-2 px-4 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">⬇️ Download Signed Submission Receipt (.json)</button></div>'
+              ? '<div class="w-full space-y-2"><div class="w-full py-2 px-4 rounded-xl text-xs font-bold bg-emerald-950/40 text-emerald-300 border border-emerald-500/30 text-center">✓ Exam Completed &amp; Saved · Marks: ' + myScore + ' / ' + totalMarks + ' · Grade: ' + computeLetterGradeInfo(myScore, totalMarks).grade + '</div><div class="grid grid-cols-1 sm:grid-cols-2 gap-2"><button type="button" onclick="downloadStudentAttemptTextFile(currentUser, ' + e.id + ')" class="w-full py-2.5 px-3 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow transition">📄 Download Attempt Report (.txt)</button><button type="button" onclick="downloadStudentExamReceiptJson(currentUser, ' + e.id + ')" class="w-full py-2.5 px-3 rounded-xl text-xs font-semibold bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 transition">⬇️ Download Backup (.json)</button></div></div>'
               : (!access.allowed
                   ? '<button type="button" disabled class="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-slate-950 text-rose-300 border border-rose-500/30 opacity-80 cursor-not-allowed">' + escapeHtml(access.reason) + '</button>'
                   : '<button type="button" onclick="openExamBriefing(' + e.id + ')" class="w-full py-2.5 px-4 rounded-xl text-xs font-bold bg-indigo-600 hover:bg-indigo-500 text-white shadow-lg shadow-indigo-600/20 transition">' + (attempt ? 'Resume Proctored Exam &rarr;' : 'Open Proctored Exam &rarr;') + '</button>')) +
@@ -8758,7 +9024,7 @@ int main() {
         saveState();
       }
       if (currentUser && currentUser.role === 'student') {
-        downloadStudentExamReceiptJson(currentUser, activeExamSession.eid);
+        downloadStudentAttemptTextFile(currentUser, activeExamSession.eid);
       }
 
       $('fullscreenLockOverlay').classList.add('hidden');
